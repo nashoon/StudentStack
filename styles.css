@@ -566,7 +566,20 @@ a { color: var(--accent); text-decoration: none; }
 /* ============ Browse page ============ */
 .browse-main { padding-bottom: 48px; }
 
-.browse-toolbar { margin-bottom: 6px; }
+.browse-toolbar { margin-bottom: 14px; gap: 16px; }
+
+.browse-search {
+  flex: 1 1 260px;
+  max-width: 340px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+.browse-search:focus { outline: 2px solid var(--accent); border-color: transparent; }
+@media (max-width: 560px) { .browse-search { max-width: none; } }
 
 .category-row { margin-bottom: 22px; }
 

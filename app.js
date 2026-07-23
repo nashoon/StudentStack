@@ -242,6 +242,8 @@ if (browseGrid) {
   const catFiltersEl = document.getElementById("category-filters");
   const priceFiltersEl = document.getElementById("pricing-filters");
   const emptyEl = document.getElementById("deals-empty");
+  const searchEl = document.getElementById("browse-search");
+  let searchTerm = "";
 
   const categories = ["All", ...new Set(DEALS.map((d) => d.category))];
 
@@ -288,15 +290,23 @@ if (browseGrid) {
     );
 
     const pricing = PRICING_FILTERS[activePricing];
+    const q = searchTerm.trim().toLowerCase();
     const visible = DEALS.filter(
-      (d) => pricing.match(d) && (activeCategory === "All" || d.category === activeCategory),
+      (d) =>
+        pricing.match(d) &&
+        (activeCategory === "All" || d.category === activeCategory) &&
+        (!q || `${d.name} ${d.description} ${d.category} ${d.deal || ""}`.toLowerCase().includes(q)),
     );
 
-    headingEl.textContent = `${pricing.heading} (${visible.length})`;
+    headingEl.textContent = q
+      ? `“${searchTerm.trim()}” (${visible.length})`
+      : `${pricing.heading} (${visible.length})`;
     browseGrid.innerHTML = "";
     emptyEl.hidden = visible.length > 0;
     for (const deal of visible) browseGrid.appendChild(buildCard(deal, { compact: true }));
   }
+
+  if (searchEl) searchEl.addEventListener("input", () => { searchTerm = searchEl.value; renderBrowse(); });
 
   renderBrowse();
 }
