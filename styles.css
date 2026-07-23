@@ -282,6 +282,21 @@ a { color: var(--accent); text-decoration: none; }
   .belt-track span[aria-hidden="true"] { display: none; }
 }
 
+/* ============ Category nav (home) ============ */
+.cat-nav { padding: 42px 0 6px; }
+.cat-nav-title { font-size: 1.25rem; margin-bottom: 16px; }
+.cat-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.cat-chips a {
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.cat-chips a:hover { border-color: var(--accent); color: var(--accent); }
+
 /* ============ Deals ============ */
 .deals-toolbar {
   display: flex;
