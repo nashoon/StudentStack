@@ -241,7 +241,7 @@ const DEALS = [
       "No student discount currently — the free tier is the student play",
     ],
     url: "https://chatgpt.com/",
-    image: "images/chatgpt.png",
+    image: "images/chatgpt.jpg",
     rating: { score: 1.2, count: 1094, source: "Trustpilot", url: "https://www.trustpilot.com/review/openai.com", checked: "2026-07-23" },
     pricing: "freemium",
     popular: true,
