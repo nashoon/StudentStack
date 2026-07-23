@@ -171,6 +171,12 @@ function buildCard(deal, { compact = false } = {}) {
     tag.textContent = PRICING_LABELS[deal.pricing];
     badges.append(tag);
   }
+  if (deal.trialLength) {
+    const tp = document.createElement("span");
+    tp.className = "trial-pill";
+    tp.textContent = deal.trialLength;
+    badges.append(tp);
+  }
 
   const price = document.createElement("p");
   price.className = "deal-price";
@@ -403,6 +409,12 @@ if (detailRoot) {
       tag.className = "pricing-tag";
       tag.textContent = PRICING_LABELS[deal.pricing];
       badges.append(tag);
+    }
+    if (deal.trialLength) {
+      const tp = document.createElement("span");
+      tp.className = "trial-pill";
+      tp.textContent = deal.trialLength;
+      badges.append(tp);
     }
 
     const points = document.createElement("ul");

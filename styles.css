@@ -10,6 +10,8 @@
   --accent-soft: #eef2ff;
   --badge: #059669;
   --badge-soft: #ecfdf5;
+  --trial-ink: #b45309;
+  --trial-soft: #fef3c7;
   --radius: 12px;
   --shadow: 0 1px 3px rgba(20, 22, 40, 0.07), 0 8px 24px rgba(20, 22, 40, 0.06);
 }
@@ -322,6 +324,17 @@ a { color: var(--accent); text-decoration: none; }
   border-radius: 999px;
 }
 
+.trial-pill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--trial-ink);
+  background: var(--trial-soft);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.compact-card .trial-pill { font-size: 0.68rem; padding: 3px 8px; }
+
 .deal-price {
   font-weight: 800;
   font-size: 0.98rem;
@@ -576,6 +589,8 @@ a { color: var(--accent); text-decoration: none; }
     --accent-soft: #1e2036;
     --badge: #34d399;
     --badge-soft: #0d2b22;
+    --trial-ink: #fcd34d;
+    --trial-soft: #3a2e10;
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3);
   }
   .demo-banner { background: #3a2e10; color: #fcd34d; }
