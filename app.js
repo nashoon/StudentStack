@@ -244,6 +244,7 @@ if (browseGrid) {
   const emptyEl = document.getElementById("deals-empty");
   const searchEl = document.getElementById("browse-search");
   let searchTerm = "";
+  if (searchEl) searchEl.placeholder = `Search ${DEALS.length} tools…`;
 
   const categories = ["All", ...new Set(DEALS.map((d) => d.category))];
 
