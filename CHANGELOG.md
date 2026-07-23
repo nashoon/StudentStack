@@ -10,7 +10,10 @@ enrichment layer · mobile hamburger nav · richer footer nav · related deals �
 accessibility (skip-link, focus rings, `aria-current`) · home category row ·
 light-mode verified · Tool Finder closes on Escape/click-outside · branded
 404 page · favicon preconnect · browse sort control (Featured/Top rated/A–Z) ·
-cleaner signup message.
+cleaner signup message · image-weight optimization (~1.2 MB lighter).
+
+_Overnight session wrapped ~02:30 KST 2026-07-24 — ~24 commits. Loop stopped
+here rather than making marginal changes to the live site unattended._
 
 ### Features
 - **Tool Finder chatbot** (`advisor.js`) — a floating "🎯 Find your tool" widget.
