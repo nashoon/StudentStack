@@ -23,8 +23,8 @@ short, and make the ask tiny.
 > Hi [Name],
 >
 > I'm [your name], a student at [school]. With friends at Northwestern,
-> Stanford, UCLA, Princeton, and a few other schools, we run StudentStack —
-> a directory of AI tools with student deals ([link]).
+> Stanford, UCLA, Johns Hopkins, Cornell, and a few other schools, we run
+> StudentStack — a directory of AI tools with student deals ([link]).
 >
 > Students constantly ask us about [Product] — it's one of the most viewed
 > tools on our site. We'd love to send you those users officially:
