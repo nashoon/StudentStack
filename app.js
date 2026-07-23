@@ -255,6 +255,8 @@ if (browseGrid) {
   const searchEl = document.getElementById("browse-search");
   let searchTerm = "";
   if (searchEl) searchEl.placeholder = `Search ${DEALS.length} tools…`;
+  const sortEl = document.getElementById("browse-sort");
+  let sortKey = "featured";
 
   const categories = ["All", ...new Set(DEALS.map((d) => d.category))];
 
@@ -309,6 +311,12 @@ if (browseGrid) {
         (!q || `${d.name} ${d.description} ${d.category} ${d.deal || ""}`.toLowerCase().includes(q)),
     );
 
+    if (sortKey === "rating") {
+      visible.sort((a, b) => (b.rating?.score || 0) - (a.rating?.score || 0));
+    } else if (sortKey === "name") {
+      visible.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
     headingEl.textContent = q
       ? `“${searchTerm.trim()}” (${visible.length})`
       : `${pricing.heading} (${visible.length})`;
@@ -318,6 +326,7 @@ if (browseGrid) {
   }
 
   if (searchEl) searchEl.addEventListener("input", () => { searchTerm = searchEl.value; renderBrowse(); });
+  if (sortEl) sortEl.addEventListener("change", () => { sortKey = sortEl.value; renderBrowse(); });
 
   renderBrowse();
 }

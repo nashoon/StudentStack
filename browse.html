@@ -43,7 +43,14 @@
   <main class="container browse-main">
     <div class="deals-toolbar browse-toolbar">
       <h2 id="browse-heading">All deals</h2>
-      <input type="search" id="browse-search" class="browse-search" placeholder="Search tools…" aria-label="Search tools" autocomplete="off" />
+      <div class="browse-controls">
+        <input type="search" id="browse-search" class="browse-search" placeholder="Search tools…" aria-label="Search tools" autocomplete="off" />
+        <select id="browse-sort" class="browse-sort" aria-label="Sort deals">
+          <option value="featured">Featured</option>
+          <option value="rating">Top rated</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
     </div>
     <div class="filters" id="pricing-filters" role="tablist" aria-label="Filter deals by pricing"></div>
     <div class="filters category-row" id="category-filters" role="tablist" aria-label="Filter deals by category"></div>
