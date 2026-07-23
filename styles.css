@@ -124,6 +124,62 @@ a { color: var(--accent); text-decoration: none; }
 
 .hero-note { margin-top: 16px; font-size: 0.85rem; color: var(--ink-soft); }
 
+.trust-points {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.trust-points li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.trust-points li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--badge);
+  font-weight: 800;
+}
+
+/* ============ Stats strip ============ */
+.stats-bar {
+  border-block: 1px solid var(--line);
+  background: var(--surface);
+}
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 26px 0;
+}
+.stat { text-align: center; padding: 0 8px; }
+.stat + .stat { border-left: 1px solid var(--line); }
+.stat-num {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.stat-label {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+@media (max-width: 560px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); gap: 20px 12px; }
+  .stat:nth-child(3) { border-left: none; }
+  .stat-num { font-size: 1.6rem; }
+}
+
 /* ============ College belt ============ */
 .belt-wrap { margin-top: 26px; }
 
