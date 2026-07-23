@@ -277,6 +277,7 @@ if (browseGrid) {
     for (const { key, label } of items) {
       const btn = document.createElement("button");
       btn.className = "filter-chip" + (key === active ? " active" : "");
+      if (key === active) btn.setAttribute("aria-current", "true");
       btn.textContent = label;
       btn.addEventListener("click", () => onPick(key));
       el.appendChild(btn);
@@ -570,7 +571,7 @@ if (form) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     status.textContent =
-      "Signups aren't live yet — this form isn't connected to a mailing list. (Dev note: see TODO in app.js)";
+      "Email alerts are coming soon — we're not collecting signups just yet. Check back before the school year starts!";
     status.hidden = false;
   });
 }

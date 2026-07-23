@@ -4,6 +4,14 @@
 
 A big build + self-refinement night. Newest first.
 
+### Self-refinement rounds (each its own commit)
+Live search · screenshot QA (denylisted bot-wall captures) · +26 free deals ·
+enrichment layer · mobile hamburger nav · richer footer nav · related deals ·
+accessibility (skip-link, focus rings, `aria-current`) · home category row ·
+light-mode verified · Tool Finder closes on Escape/click-outside · branded
+404 page · favicon preconnect · browse sort control (Featured/Top rated/A–Z) ·
+cleaner signup message.
+
 ### Features
 - **Tool Finder chatbot** (`advisor.js`) — a floating "🎯 Find your tool" widget.
   Describe your problem in plain words; it scores all deals against the catalog
