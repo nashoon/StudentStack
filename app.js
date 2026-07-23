@@ -532,6 +532,21 @@ if (detailRoot) {
 
     gridEl.append(main, card);
     detailRoot.append(crumbs, gridEl);
+
+    // related deals — up to 4 others in the same category
+    const related = DEALS.filter((x) => x.category === deal.category && dealSlug(x) !== slug).slice(0, 4);
+    if (related.length) {
+      const sec = document.createElement("section");
+      sec.className = "related";
+      const rh = document.createElement("h2");
+      rh.className = "detail-section-title";
+      rh.textContent = `More ${deal.category} deals`;
+      const grid = document.createElement("div");
+      grid.className = "deals-grid compact related-grid";
+      for (const r of related) grid.appendChild(buildCard(r, { compact: true }));
+      sec.append(rh, grid);
+      detailRoot.append(sec);
+    }
   }
 }
 

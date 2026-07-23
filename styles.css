@@ -596,6 +596,12 @@ a { color: var(--accent); text-decoration: none; }
 .detail-missing { text-align: center; padding: 70px 0; }
 .detail-missing p { color: var(--ink-soft); margin: 10px 0 24px; }
 
+/* ============ Related deals (detail page) ============ */
+.related { margin-top: 52px; }
+.related-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .related-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .related-grid { grid-template-columns: 1fr; } }
+
 /* ============ Browse page ============ */
 .browse-main { padding-bottom: 48px; }
 
