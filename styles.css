@@ -697,15 +697,45 @@ a { color: var(--accent); text-decoration: none; }
 /* ============ Footer ============ */
 .site-footer {
   border-top: 1px solid var(--line);
-  padding: 32px 0 44px;
+  padding: 44px 0 40px;
   background: var(--surface);
 }
 
-.footer-fine {
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 30px;
+  padding-bottom: 28px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.footer-brand .logo { font-size: 1.15rem; }
+.footer-brand p {
   margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  max-width: 340px;
+}
+.footer-col { display: flex; flex-direction: column; gap: 10px; }
+.footer-col h4 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 2px;
+}
+.footer-col a { color: var(--ink); font-size: 0.9rem; }
+.footer-col a:hover { color: var(--accent); }
+
+.footer-fine {
   font-size: 0.8rem;
   color: var(--ink-soft);
-  max-width: 720px;
+  max-width: 760px;
+}
+
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .footer-brand { grid-column: 1 / -1; }
 }
 
 /* ============ Tool Finder (advisor) ============ */
