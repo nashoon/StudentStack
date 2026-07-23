@@ -25,6 +25,16 @@ if (typeof ENRICH !== "undefined") {
   for (const d of DEALS) Object.assign(d, ENRICH[dealSlug(d)] || {});
 }
 
+// Mobile nav hamburger toggle (runs on every page).
+const navToggle = document.querySelector(".nav-toggle");
+const navMenu = document.querySelector(".nav");
+if (navToggle && navMenu) {
+  navToggle.addEventListener("click", () => {
+    const open = navMenu.classList.toggle("open");
+    navToggle.setAttribute("aria-expanded", String(open));
+  });
+}
+
 function brandColor(name) {
   const hash = [...name].reduce((h, ch) => h + ch.charCodeAt(0), 0);
   return MONOGRAM_COLORS[hash % MONOGRAM_COLORS.length];
