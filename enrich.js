@@ -315,4 +315,255 @@ const ENRICH = {
       url: "https://doi.org/10.1177/1529100612453266",
     },
   },
+  "replit": {
+    bestFor: "Coding from any browser, even a Chromebook",
+    screenshot: true,
+    useCases: [
+      "Build and host a class project with nothing installed locally",
+      "Scaffold an app from a prompt with the AI Agent, then tweak the code",
+      "Collaborate on code live with teammates, like a Google Doc",
+    ],
+    shots: ["https://replit.com/pricing"],
+  },
+  "google-colab": {
+    bestFor: "Data-science & ML coursework with free GPUs",
+    screenshot: true,
+    useCases: [
+      "Run Python notebooks with a free GPU for an ML assignment",
+      "Share a runnable notebook with your lab or study group",
+      "Prototype models without a powerful laptop",
+    ],
+    shots: ["https://research.google.com/colaboratory/"],
+  },
+  "windsurf": {
+    bestFor: "AI-agent coding inside a full editor",
+    screenshot: true,
+    useCases: [
+      "Let the agent refactor across files from a plain-English request",
+      "Autocomplete boilerplate with unlimited Tab completions",
+      "Point it at failing tests and review the proposed fix",
+    ],
+    shots: ["https://devin.ai/pricing"],
+  },
+  "v0-by-vercel": {
+    bestFor: "Turning a prompt into real UI code",
+    screenshot: true,
+    useCases: [
+      "Generate a React + Tailwind component from a description",
+      "Prototype a landing page, then export the code",
+      "Iterate on a design by chatting with it",
+    ],
+  },
+  "bolt-new": {
+    bestFor: "Building a full web app from one prompt",
+    screenshot: true,
+    useCases: [
+      "Spin up a working web app in the browser in minutes",
+      "Prototype a hackathon idea without local setup",
+      "Edit and deploy straight from the chat",
+    ],
+  },
+  "microsoft-copilot": {
+    bestFor: "A free GPT-class assistant in your browser",
+    screenshot: true,
+    useCases: [
+      "Draft and summarize with a free GPT-based chat",
+      "Generate images from a prompt",
+      "Get a confusing concept explained step by step",
+    ],
+    shots: ["https://www.microsoft.com/en-us/microsoft-copilot"],
+  },
+  "todoist": {
+    bestFor: "Keeping every assignment and deadline in order",
+    screenshot: true,
+    useCases: [
+      "Capture assignments with natural-language due dates ('essay fri 5pm')",
+      "See everything due today across all your classes",
+      "Set recurring reminders for weekly readings",
+    ],
+    shots: ["https://www.todoist.com/pricing"],
+  },
+  "clickup": {
+    bestFor: "Running group projects in one workspace",
+    screenshot: true,
+    useCases: [
+      "Manage a team project with tasks, docs, and a timeline",
+      "Track a thesis or long assignment in stages",
+      "Summarize project docs with built-in AI",
+    ],
+    shots: ["https://clickup.com/pricing"],
+  },
+  "taskade": {
+    bestFor: "AI to-do lists and mind maps",
+    screenshot: true,
+    useCases: [
+      "Outline a project as a mind map, then work it as a checklist",
+      "Run AI agents over a task list to draft next steps",
+      "Collaborate on plans in real time",
+    ],
+    shots: ["https://www.taskade.com/pricing"],
+  },
+  "obsidian": {
+    bestFor: "A private, offline second brain",
+    screenshot: true,
+    useCases: [
+      "Link lecture notes into a personal knowledge graph",
+      "Write in plain Markdown files you actually own",
+      "Study from your own connected notes, no account needed",
+    ],
+    shots: ["https://obsidian.md/pricing"],
+  },
+  "goblin-tools": {
+    bestFor: "Breaking overwhelming tasks into steps",
+    screenshot: true,
+    useCases: [
+      "Paste a big assignment and get a step-by-step breakdown",
+      "Estimate how long each task will actually take",
+      "De-jargon a confusing email or tune its tone",
+    ],
+  },
+  "elicit": {
+    bestFor: "Finding and summarizing research papers",
+    screenshot: true,
+    useCases: [
+      "Ask a research question and get papers with extracted findings",
+      "Screen a large set of papers quickly in a table",
+      "Summarize a paper's key claims before you read it",
+    ],
+    shots: ["https://elicit.com/pricing"],
+  },
+  "consensus": {
+    bestFor: "Answering questions from real studies",
+    screenshot: true,
+    useCases: [
+      "Check what the research actually says on a claim",
+      "Find supporting (and opposing) papers for an essay",
+      "Skim the evidence with the consensus meter",
+    ],
+    shots: ["https://consensus.app/home/pricing/"],
+  },
+  "semantic-scholar": {
+    bestFor: "Free scholarly search across 200M+ papers",
+    screenshot: true,
+    useCases: [
+      "Find papers and trace their citations for free",
+      "Read TL;DR summaries of dense abstracts",
+      "Build a reading list for a new topic",
+    ],
+  },
+  "researchrabbit": {
+    bestFor: "Mapping how papers connect",
+    screenshot: true,
+    useCases: [
+      "Start from one paper and discover related work visually",
+      "See a citation network for a research area",
+      "Get alerts when new papers land in your field",
+    ],
+  },
+  "scispace": {
+    bestFor: "Chatting with a PDF you don't understand",
+    screenshot: true,
+    useCases: [
+      "Upload a paper and ask it questions in plain language",
+      "Get the math and jargon explained inline",
+      "Find and compare papers on a topic",
+    ],
+    shots: ["https://scispace.com/pricing"],
+  },
+  "connected-papers": {
+    bestFor: "A visual map of a research field",
+    screenshot: true,
+    useCases: [
+      "Generate a graph of papers around one topic",
+      "Spot the seminal and the derivative work at a glance",
+      "Explore a new field before writing a lit review",
+    ],
+  },
+  "wordtune": {
+    bestFor: "Rewriting sentences to read better",
+    screenshot: true,
+    useCases: [
+      "Rephrase awkward sentences in your own words",
+      "Shift tone between casual and formal",
+      "Shorten or expand a draft to fit a word count",
+    ],
+    shots: ["https://www.wordtune.com/pricing"],
+  },
+  "languagetool": {
+    bestFor: "Free multilingual grammar checking",
+    screenshot: true,
+    useCases: [
+      "Proofread essays in English or 30+ other languages",
+      "Catch grammar and style as you type in the browser",
+      "Check clarity on a draft before submitting",
+    ],
+    shots: ["https://languagetool.org/pricing"],
+  },
+  "hemingway-editor": {
+    bestFor: "Making your writing clear and punchy",
+    screenshot: true,
+    useCases: [
+      "Highlight hard-to-read sentences and fix them",
+      "Cut adverbs and passive voice",
+      "Tighten an essay before you hand it in",
+    ],
+  },
+  "jenni-ai": {
+    bestFor: "Drafting essays with inline citations",
+    screenshot: true,
+    useCases: [
+      "Draft sections with AI autocomplete (to assist, not replace your work)",
+      "Add in-text citations as you write",
+      "Paraphrase sources cleanly and cite them",
+    ],
+    shots: ["https://jenni.ai/pricing"],
+  },
+  "adobe-express": {
+    bestFor: "Quick graphics and social posts",
+    screenshot: true,
+    useCases: [
+      "Design a flyer or post from a template in minutes",
+      "Remove backgrounds and resize images with AI",
+      "Make a quick video, PDF, or presentation",
+    ],
+    shots: ["https://www.adobe.com/express/pricing.html"],
+  },
+  "framer": {
+    bestFor: "Designing and publishing a real website",
+    screenshot: true,
+    useCases: [
+      "Build a portfolio site with no code",
+      "Design and launch a club or project page",
+      "Prototype interactions and animations visually",
+    ],
+    shots: ["https://www.framer.com/pricing/"],
+  },
+  "microsoft-designer": {
+    bestFor: "AI graphic design, free",
+    screenshot: true,
+    useCases: [
+      "Generate social graphics from a text prompt",
+      "Make invitations, posters, and thumbnails",
+      "Create images with built-in AI tools",
+    ],
+  },
+  "photopea": {
+    bestFor: "Free Photoshop in your browser",
+    screenshot: true,
+    useCases: [
+      "Edit images and PSD files without buying Photoshop",
+      "Touch up graphics for a project or club",
+      "Work with layers and masks for free",
+    ],
+  },
+  "leonardo-ai": {
+    bestFor: "Generating art and game assets",
+    screenshot: true,
+    useCases: [
+      "Generate images from prompts with daily free tokens",
+      "Make concept art, assets, or illustrations",
+      "Upscale and edit AI-generated images",
+    ],
+    shots: ["https://leonardo.ai/pricing/"],
+  },
 };
