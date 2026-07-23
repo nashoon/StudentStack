@@ -122,6 +122,55 @@ a { color: var(--accent); text-decoration: none; }
 
 .hero-note { margin-top: 16px; font-size: 0.85rem; color: var(--ink-soft); }
 
+/* ============ College belt ============ */
+.belt-wrap { margin-top: 26px; }
+
+.belt-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+
+.belt {
+  overflow: hidden;
+  max-width: 720px;
+  margin: 0 auto;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.belt-track {
+  display: inline-flex;
+  gap: 44px;
+  padding-right: 44px;
+  white-space: nowrap;
+  animation: belt-scroll 26s linear infinite;
+}
+.belt:hover .belt-track { animation-play-state: paused; }
+
+.belt-track span {
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.75;
+}
+
+@keyframes belt-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .belt-track { animation: none; flex-wrap: wrap; justify-content: center; white-space: normal; }
+  .belt { mask-image: none; -webkit-mask-image: none; }
+  .belt-track span[aria-hidden="true"] { display: none; }
+}
+
 /* ============ Deals ============ */
 .deals-toolbar {
   display: flex;
@@ -273,7 +322,26 @@ a { color: var(--accent); text-decoration: none; }
   border-radius: 999px;
 }
 
+.deal-price {
+  font-weight: 800;
+  font-size: 0.98rem;
+  font-variant-numeric: tabular-nums;
+}
+
 .deal-desc { color: var(--ink-soft); font-size: 0.93rem; flex-grow: 1; }
+
+.deal-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+}
+.rating-star { color: #f59e0b; }
+.deal-rating strong { color: var(--ink); }
+.rating-source { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px; }
+.rating-source:hover { color: var(--accent); }
+.deal-rating-few { font-size: 0.83rem; font-style: italic; }
 
 .deal-cta { margin-top: 6px; text-align: center; }
 
@@ -324,6 +392,50 @@ a { color: var(--accent); text-decoration: none; }
   position: sticky;
   top: 80px;
 }
+
+.price-big {
+  font-size: 1.45rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.detail-section-title { font-size: 1.15rem; margin: 28px 0 12px; }
+
+.detail-points {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 640px;
+}
+.detail-points li {
+  position: relative;
+  padding-left: 26px;
+  color: var(--ink-soft);
+}
+.detail-points li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--badge);
+  font-weight: 800;
+}
+
+.thumb-strip { display: flex; gap: 10px; margin-top: 12px; }
+.thumb {
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  background: var(--surface);
+  cursor: pointer;
+  overflow: hidden;
+  width: 84px;
+  height: 54px;
+}
+.thumb.active { border-color: var(--accent); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .price-points {
   list-style: none;

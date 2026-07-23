@@ -1,6 +1,7 @@
 // Shared rendering for StudentStack.
 // index.html  — popular deals grid + email signup
 // browse.html — full catalog, compact 4-per-row grid, category + pricing filters
+// deal.html   — deal detail page (?d=<slug>)
 
 const PRICING_LABELS = {
   free: "Free",
@@ -8,6 +9,10 @@ const PRICING_LABELS = {
   trial: "Free trial",
   discount: "Student discount",
 };
+
+// Ratings with fewer than this many reviews don't show a score —
+// a 5-star average from 3 reviews is noise, not signal.
+const MIN_REVIEWS = 20;
 
 const MONOGRAM_COLORS = ["#4f46e5", "#059669", "#d97706", "#dc2626", "#0891b2", "#7c3aed"];
 
@@ -63,8 +68,26 @@ function mshotsUrl(url, attempt) {
   return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=640${attempt ? `&r=${attempt}` : ""}`;
 }
 
+function buildScreenshotImg(deal) {
+  const img = document.createElement("img");
+  img.className = "deal-shot";
+  img.alt = `${deal.name} site preview`;
+  img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
+  let attempts = 0;
+  img.addEventListener("load", () => {
+    // real screenshots come back 640px wide; smaller means the
+    // "generating…" placeholder, so retry until the real one exists
+    if (img.naturalWidth < 640 && attempts < 4) {
+      attempts++;
+      setTimeout(() => { img.src = mshotsUrl(deal.url, attempts); }, 4000);
+    }
+  });
+  img.src = mshotsUrl(deal.url, 0);
+  return img;
+}
+
 // Card visual, in priority order:
-// 1. deal.image      — hand-picked usage demo (PNG/GIF from the vendor's press kit)
+// 1. deal.image      — vendor's official image (or press-kit PNG/GIF)
 // 2. deal.screenshot — live site screenshot via mShots (opt-in, verified per deal)
 // 3. branded logo tile
 function buildVisual(deal) {
@@ -76,26 +99,43 @@ function buildVisual(deal) {
     img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
     return img;
   }
-
-  if (deal.screenshot) {
-    const img = document.createElement("img");
-    img.className = "deal-shot";
-    img.alt = `${deal.name} preview`;
-    img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
-    let attempts = 0;
-    img.addEventListener("load", () => {
-      // real screenshots come back 640px wide; smaller means the
-      // "generating…" placeholder, so retry until the real one exists
-      if (img.naturalWidth < 640 && attempts < 4) {
-        attempts++;
-        setTimeout(() => { img.src = mshotsUrl(deal.url, attempts); }, 4000);
-      }
-    });
-    img.src = mshotsUrl(deal.url, 0);
-    return img;
-  }
-
+  if (deal.screenshot) return buildScreenshotImg(deal);
   return buildTile(deal);
+}
+
+function formatCount(n) {
+  return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k" : String(n);
+}
+
+// Rating row. Scores from few reviews are hidden (see MIN_REVIEWS);
+// the detail page says why instead of showing nothing.
+function buildRating(deal, { detail = false } = {}) {
+  const r = deal.rating;
+  if (!r) return null;
+  if (r.count < MIN_REVIEWS) {
+    if (!detail) return null;
+    const few = document.createElement("p");
+    few.className = "deal-rating deal-rating-few";
+    few.textContent = `Only ${r.count} reviews on ${r.source} — too few for a fair score`;
+    return few;
+  }
+  const wrap = document.createElement(detail ? "p" : "div");
+  wrap.className = "deal-rating";
+  const star = document.createElement("span");
+  star.className = "rating-star";
+  star.textContent = "★";
+  const score = document.createElement("strong");
+  score.textContent = r.score.toFixed(1);
+  const src = document.createElement("a");
+  src.href = r.url;
+  src.target = "_blank";
+  src.rel = "noopener";
+  src.className = "rating-source";
+  src.textContent = detail
+    ? `${r.count.toLocaleString()} reviews on ${r.source}`
+    : `${formatCount(r.count)} · ${r.source}`;
+  wrap.append(star, score, src);
+  return wrap;
 }
 
 function buildCard(deal, { compact = false } = {}) {
@@ -132,6 +172,10 @@ function buildCard(deal, { compact = false } = {}) {
     badges.append(tag);
   }
 
+  const price = document.createElement("p");
+  price.className = "deal-price";
+  price.textContent = deal.price;
+
   const desc = document.createElement("p");
   desc.className = "deal-desc";
   desc.textContent = deal.description;
@@ -142,7 +186,10 @@ function buildCard(deal, { compact = false } = {}) {
   cta.textContent = compact ? "View deal →" : "View this deal →";
   cta.href = `deal.html?d=${dealSlug(deal)}`;
 
-  card.append(top, badges, buildVisual(deal), desc, cta);
+  card.append(top, badges, buildVisual(deal), price, desc);
+  const rating = buildRating(deal);
+  if (rating) card.append(rating);
+  card.append(cta);
   return card;
 }
 
@@ -261,6 +308,7 @@ if (detailRoot) {
     const gridEl = document.createElement("div");
     gridEl.className = "detail-grid";
 
+    // ----- left column: title, gallery, what you get -----
     const main = document.createElement("div");
     main.className = "detail-body";
     const h1 = document.createElement("h1");
@@ -268,12 +316,68 @@ if (detailRoot) {
     const tagline = document.createElement("p");
     tagline.className = "detail-tagline";
     tagline.textContent = deal.description;
-    const visual = buildVisual(deal);
+    main.append(h1, tagline);
+
+    // gallery: main visual + thumbnails when there's more than one image.
+    // Sources: deal.image, any deal.gallery entries, live screenshot if enabled.
+    const sources = [];
+    if (deal.image) sources.push({ type: "img", src: deal.image });
+    for (const g of deal.gallery || []) sources.push({ type: "img", src: g });
+    if (deal.screenshot) sources.push({ type: "shot" });
+
     const visualWrap = document.createElement("div");
     visualWrap.className = "detail-visual";
-    visualWrap.append(visual);
-    main.append(h1, tagline, visualWrap);
+    const makeMain = (s) => {
+      visualWrap.innerHTML = "";
+      if (!s) { visualWrap.append(buildTile(deal)); return; }
+      if (s.type === "shot") { visualWrap.append(buildScreenshotImg(deal)); return; }
+      const img = document.createElement("img");
+      img.className = "deal-shot";
+      img.alt = `${deal.name} preview`;
+      img.src = s.src;
+      img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
+      visualWrap.append(img);
+    };
+    makeMain(sources[0]);
+    main.append(visualWrap);
 
+    if (sources.length > 1) {
+      const strip = document.createElement("div");
+      strip.className = "thumb-strip";
+      sources.forEach((s, i) => {
+        const t = document.createElement("button");
+        t.className = "thumb" + (i === 0 ? " active" : "");
+        t.type = "button";
+        t.setAttribute("aria-label", `Image ${i + 1}`);
+        const ti = document.createElement("img");
+        ti.src = s.type === "shot" ? mshotsUrl(deal.url, 0) : s.src;
+        ti.alt = "";
+        t.append(ti);
+        t.addEventListener("click", () => {
+          makeMain(s);
+          strip.querySelectorAll(".thumb").forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+        });
+        strip.append(t);
+      });
+      main.append(strip);
+    }
+
+    if (deal.details && deal.details.length) {
+      const dh = document.createElement("h2");
+      dh.className = "detail-section-title";
+      dh.textContent = "What you get";
+      const dl = document.createElement("ul");
+      dl.className = "detail-points";
+      for (const t of deal.details) {
+        const li = document.createElement("li");
+        li.textContent = t;
+        dl.append(li);
+      }
+      main.append(dh, dl);
+    }
+
+    // ----- right column: price card -----
     const card = document.createElement("aside");
     card.className = "price-card";
     const identity = document.createElement("div");
@@ -283,6 +387,10 @@ if (detailRoot) {
     cardName.className = "deal-name";
     cardName.textContent = deal.name;
     identity.append(cardName);
+
+    const priceBig = document.createElement("p");
+    priceBig.className = "price-big";
+    priceBig.textContent = deal.price;
 
     const badges = document.createElement("div");
     badges.className = "deal-badges";
@@ -323,7 +431,11 @@ if (detailRoot) {
     fine.className = "price-fine";
     fine.textContent = "If this is an affiliate link, we may earn a commission — at no extra cost to you.";
 
-    card.append(identity, badges, points, cta, fine);
+    card.append(identity, priceBig, badges);
+    const ratingRow = buildRating(deal, { detail: true });
+    if (ratingRow) card.append(ratingRow);
+    card.append(points, cta, fine);
+
     gridEl.append(main, card);
     detailRoot.append(crumbs, gridEl);
   }
