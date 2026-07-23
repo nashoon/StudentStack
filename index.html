@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudentStack — AI tool deals for students</title>
+  <meta name="description" content="Curated discounts and free tiers on the best AI tools for studying, writing, research, and productivity. Built by students, for students." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="demo-banner">
+    Demo data — offers below are samples and not yet verified. Remove this banner before launch.
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#">Student<span>Stack</span></a>
+      <nav class="nav">
+        <a href="browse.html">All deals</a>
+        <a href="browse.html?pricing=free">Free stuff</a>
+        <a href="#how">How it works</a>
+        <a href="#signup" class="btn btn-small">Get deal alerts</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>The AI tools you actually need.<br />At prices students can afford.</h1>
+      <p class="hero-sub">
+        We hunt down student discounts, free education tiers, and exclusive deals on
+        AI tools for studying, writing, research, and getting stuff done — so you
+        don't have to pay full price or dig through sketchy coupon sites.
+      </p>
+      <div class="hero-actions">
+        <a href="browse.html" class="btn btn-primary">Browse all deals</a>
+        <a href="browse.html?pricing=free" class="btn btn-ghost">Browse free deals</a>
+        <a href="browse.html?pricing=trial" class="btn btn-ghost">Browse free trials</a>
+      </div>
+      <p class="hero-note">Every deal links straight to the company's own official site. No middleman checkout, ever.</p>
+    </div>
+  </section>
+
+  <main id="deals" class="container">
+    <div class="deals-toolbar">
+      <h2>Popular deals</h2>
+      <a class="see-all" href="browse.html">See all deals →</a>
+    </div>
+    <div class="deals-grid" id="popular-grid"></div>
+  </main>
+
+  <section id="how" class="how">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <h3>We find the deals</h3>
+          <p>We track student discounts, education tiers, and negotiate exclusive offers directly with AI companies.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <h3>You claim them on the official site</h3>
+          <p>Every button takes you to the company's own checkout. We never touch your payment info.</p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <h3>The site stays free</h3>
+          <p>Some links are affiliate links — if you sign up, the company pays us a cut. It never costs you extra.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="signup" class="signup">
+    <div class="container signup-inner">
+      <h2>New student deals, straight to your inbox</h2>
+      <p>One short email when we land a new deal worth knowing about. No spam.</p>
+      <form id="signup-form" class="signup-form">
+        <input type="email" id="signup-email" placeholder="you@school.edu" required aria-label="Email address" />
+        <button type="submit" class="btn btn-primary">Notify me</button>
+      </form>
+      <p class="signup-status" id="signup-status" hidden></p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><strong>StudentStack</strong> — AI tool deals for students.</p>
+      <p class="footer-fine">
+        Disclosure: some links on this site are affiliate links, meaning we may earn a commission
+        if you sign up — at no extra cost to you. All trademarks belong to their respective owners.
+        Deals and prices are set by each company and can change at any time; always confirm the
+        offer on the company's own site.
+      </p>
+    </div>
+  </footer>
+
+  <script src="deals.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
