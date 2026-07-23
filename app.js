@@ -69,44 +69,39 @@ function buildTile(deal) {
   return tile;
 }
 
-function mshotsUrl(url, attempt) {
-  return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=640${attempt ? `&r=${attempt}` : ""}`;
+// Screenshots are pre-captured into images/shots/ at build time (see
+// shots-cache.js), so the gallery uses local files only — no live
+// screenshot service, so no low-res "generating…" placeholder ever.
+function cachedShot(url) {
+  return (typeof SHOT_CACHE !== "undefined" && url && SHOT_CACHE[url]) || null;
 }
 
-function buildScreenshotImg(deal, url) {
-  const target = url || deal.url;
+function buildImg(deal, src, alt) {
   const img = document.createElement("img");
   img.className = "deal-shot";
-  img.alt = `${deal.name} site preview`;
+  img.loading = "lazy";
+  img.alt = alt || `${deal.name} preview`;
+  img.src = src;
   img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
-  let attempts = 0;
-  img.addEventListener("load", () => {
-    // real screenshots come back 640px wide; smaller means the
-    // "generating…" placeholder, so retry until the real one exists
-    if (img.naturalWidth < 640 && attempts < 4) {
-      attempts++;
-      setTimeout(() => { img.src = mshotsUrl(target, attempts); }, 4000);
-    }
-  });
-  img.src = mshotsUrl(target, 0);
   return img;
 }
 
-// Card visual, in priority order:
-// 1. deal.image      — vendor's official image (or press-kit PNG/GIF)
-// 2. deal.screenshot — live site screenshot via mShots (opt-in, verified per deal)
-// 3. branded logo tile
+// Every gallery source a deal can offer, in priority order, as local
+// image src strings (deduped). Empty ⇒ fall back to the branded tile.
+function visualSources(deal) {
+  const out = [];
+  if (deal.image) out.push(deal.image);
+  for (const g of deal.gallery || []) out.push(g);
+  if (deal.screenshot && cachedShot(deal.url)) out.push(cachedShot(deal.url));
+  for (const u of deal.shots || []) { const s = cachedShot(u); if (s) out.push(s); }
+  const seen = new Set();
+  return out.filter((s) => s && !seen.has(s) && seen.add(s));
+}
+
+// Card visual: hero image → cached screenshot → branded tile.
 function buildVisual(deal) {
-  if (deal.image) {
-    const img = document.createElement("img");
-    img.className = "deal-shot";
-    img.alt = `${deal.name} demo`;
-    img.src = deal.image;
-    img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
-    return img;
-  }
-  if (deal.screenshot) return buildScreenshotImg(deal);
-  return buildTile(deal);
+  const src = visualSources(deal)[0];
+  return src ? buildImg(deal, src, `${deal.name} preview`) : buildTile(deal);
 }
 
 function formatCount(n) {
@@ -339,45 +334,34 @@ if (detailRoot) {
       main.append(bf);
     }
 
-    // gallery: main visual + thumbnails when there's more than one image.
-    // Sources: deal.image, any deal.gallery entries, live screenshot of the
-    // deal page if enabled, plus live screenshots of extra pages (deal.shots).
-    const sources = [];
-    if (deal.image) sources.push({ type: "img", src: deal.image });
-    for (const g of deal.gallery || []) sources.push({ type: "img", src: g });
-    if (deal.screenshot) sources.push({ type: "shot" });
-    for (const u of deal.shots || []) sources.push({ type: "shot", url: u });
+    // gallery: main visual + thumbnails. All sources are local pre-captured
+    // images (hero image + cached screenshots of the deal's key pages).
+    const imgs = visualSources(deal);
 
     const visualWrap = document.createElement("div");
     visualWrap.className = "detail-visual";
-    const makeMain = (s) => {
+    const makeMain = (src) => {
       visualWrap.innerHTML = "";
-      if (!s) { visualWrap.append(buildTile(deal)); return; }
-      if (s.type === "shot") { visualWrap.append(buildScreenshotImg(deal, s.url)); return; }
-      const img = document.createElement("img");
-      img.className = "deal-shot";
-      img.alt = `${deal.name} preview`;
-      img.src = s.src;
-      img.addEventListener("error", () => img.replaceWith(buildTile(deal)));
-      visualWrap.append(img);
+      visualWrap.append(src ? buildImg(deal, src, `${deal.name} preview`) : buildTile(deal));
     };
-    makeMain(sources[0]);
+    makeMain(imgs[0]);
     main.append(visualWrap);
 
-    if (sources.length > 1) {
+    if (imgs.length > 1) {
       const strip = document.createElement("div");
       strip.className = "thumb-strip";
-      sources.forEach((s, i) => {
+      imgs.forEach((src, i) => {
         const t = document.createElement("button");
         t.className = "thumb" + (i === 0 ? " active" : "");
         t.type = "button";
         t.setAttribute("aria-label", `Image ${i + 1}`);
         const ti = document.createElement("img");
-        ti.src = s.type === "shot" ? mshotsUrl(s.url || deal.url, 0) : s.src;
+        ti.src = src;
+        ti.loading = "lazy";
         ti.alt = "";
         t.append(ti);
         t.addEventListener("click", () => {
-          makeMain(s);
+          makeMain(src);
           strip.querySelectorAll(".thumb").forEach((x) => x.classList.remove("active"));
           t.classList.add("active");
         });
