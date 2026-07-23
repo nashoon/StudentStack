@@ -436,7 +436,37 @@ a { color: var(--accent); text-decoration: none; }
   font-weight: 800;
 }
 
-.thumb-strip { display: flex; gap: 10px; margin-top: 12px; }
+.best-for {
+  margin: -8px 0 20px;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+.best-for strong { color: var(--ink); }
+
+.impact-note {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  max-width: 640px;
+}
+.impact-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+.impact-text {
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  margin-bottom: 8px;
+}
+.impact-source {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.thumb-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
 .thumb {
   border: 2px solid var(--line);
   border-radius: 8px;

@@ -20,6 +20,11 @@ function dealSlug(deal) {
   return deal.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+// Merge the editorial layer (enrich.js) into the catalog by slug.
+if (typeof ENRICH !== "undefined") {
+  for (const d of DEALS) Object.assign(d, ENRICH[dealSlug(d)] || {});
+}
+
 function brandColor(name) {
   const hash = [...name].reduce((h, ch) => h + ch.charCodeAt(0), 0);
   return MONOGRAM_COLORS[hash % MONOGRAM_COLORS.length];
@@ -68,7 +73,8 @@ function mshotsUrl(url, attempt) {
   return `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=640${attempt ? `&r=${attempt}` : ""}`;
 }
 
-function buildScreenshotImg(deal) {
+function buildScreenshotImg(deal, url) {
+  const target = url || deal.url;
   const img = document.createElement("img");
   img.className = "deal-shot";
   img.alt = `${deal.name} site preview`;
@@ -79,10 +85,10 @@ function buildScreenshotImg(deal) {
     // "generating…" placeholder, so retry until the real one exists
     if (img.naturalWidth < 640 && attempts < 4) {
       attempts++;
-      setTimeout(() => { img.src = mshotsUrl(deal.url, attempts); }, 4000);
+      setTimeout(() => { img.src = mshotsUrl(target, attempts); }, 4000);
     }
   });
-  img.src = mshotsUrl(deal.url, 0);
+  img.src = mshotsUrl(target, 0);
   return img;
 }
 
@@ -324,19 +330,30 @@ if (detailRoot) {
     tagline.textContent = deal.description;
     main.append(h1, tagline);
 
+    if (deal.bestFor) {
+      const bf = document.createElement("p");
+      bf.className = "best-for";
+      const bfLabel = document.createElement("strong");
+      bfLabel.textContent = "Best for: ";
+      bf.append(bfLabel, deal.bestFor);
+      main.append(bf);
+    }
+
     // gallery: main visual + thumbnails when there's more than one image.
-    // Sources: deal.image, any deal.gallery entries, live screenshot if enabled.
+    // Sources: deal.image, any deal.gallery entries, live screenshot of the
+    // deal page if enabled, plus live screenshots of extra pages (deal.shots).
     const sources = [];
     if (deal.image) sources.push({ type: "img", src: deal.image });
     for (const g of deal.gallery || []) sources.push({ type: "img", src: g });
     if (deal.screenshot) sources.push({ type: "shot" });
+    for (const u of deal.shots || []) sources.push({ type: "shot", url: u });
 
     const visualWrap = document.createElement("div");
     visualWrap.className = "detail-visual";
     const makeMain = (s) => {
       visualWrap.innerHTML = "";
       if (!s) { visualWrap.append(buildTile(deal)); return; }
-      if (s.type === "shot") { visualWrap.append(buildScreenshotImg(deal)); return; }
+      if (s.type === "shot") { visualWrap.append(buildScreenshotImg(deal, s.url)); return; }
       const img = document.createElement("img");
       img.className = "deal-shot";
       img.alt = `${deal.name} preview`;
@@ -356,7 +373,7 @@ if (detailRoot) {
         t.type = "button";
         t.setAttribute("aria-label", `Image ${i + 1}`);
         const ti = document.createElement("img");
-        ti.src = s.type === "shot" ? mshotsUrl(deal.url, 0) : s.src;
+        ti.src = s.type === "shot" ? mshotsUrl(s.url || deal.url, 0) : s.src;
         ti.alt = "";
         t.append(ti);
         t.addEventListener("click", () => {
@@ -381,6 +398,41 @@ if (detailRoot) {
         dl.append(li);
       }
       main.append(dh, dl);
+    }
+
+    if (deal.useCases && deal.useCases.length) {
+      const uh = document.createElement("h2");
+      uh.className = "detail-section-title";
+      uh.textContent = "How students use it";
+      const ul = document.createElement("ul");
+      ul.className = "detail-points use-cases";
+      for (const t of deal.useCases) {
+        const li = document.createElement("li");
+        li.textContent = t;
+        ul.append(li);
+      }
+      main.append(uh, ul);
+    }
+
+    // Research-backed impact — only rendered when a real, cited study
+    // exists for this tool (see enrich.js). Never an invented number.
+    if (deal.impact) {
+      const box = document.createElement("aside");
+      box.className = "impact-note";
+      const ih = document.createElement("p");
+      ih.className = "impact-title";
+      ih.textContent = "⚡ Research-backed impact";
+      const it = document.createElement("p");
+      it.className = "impact-text";
+      it.textContent = deal.impact.text;
+      const isrc = document.createElement("a");
+      isrc.className = "impact-source";
+      isrc.href = deal.impact.url;
+      isrc.target = "_blank";
+      isrc.rel = "noopener";
+      isrc.textContent = `Source: ${deal.impact.source} →`;
+      box.append(ih, it, isrc);
+      main.append(box);
     }
 
     // ----- right column: price card -----
