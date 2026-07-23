@@ -217,4 +217,8 @@
   fab.addEventListener("click", () => toggle(true));
   panel.querySelector(".advisor-close").addEventListener("click", () => toggle(false));
   form.addEventListener("submit", (e) => { e.preventDefault(); const v = input.value; input.value = ""; ask(v); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) toggle(false); });
+  document.addEventListener("click", (e) => {
+    if (!panel.hidden && !panel.contains(e.target) && !fab.contains(e.target)) toggle(false);
+  });
 })();
