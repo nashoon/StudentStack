@@ -233,16 +233,43 @@ if (fanDeck) {
   const CENTER = (COUNT - 1) / 2;
   let offset = 0, hover = -1;
 
-  function fanLabel(d) {
-    return `${d.category} · ${PRICING_LABELS[d.pricing] || "Deal"}`.toUpperCase();
+  const fanLabel = (d) => `${d.category} · ${PRICING_LABELS[d.pricing] || "Deal"}`.toUpperCase();
+
+  // Build the 7 card elements ONCE. Smoothness depends on never rebuilding
+  // this DOM: hover/arrow updates only mutate transform/z-index (and text
+  // on rotation), so the CSS transition can actually animate.
+  const slots = [];
+  for (let i = 0; i < COUNT; i++) {
+    const card = document.createElement("a");
+    card.className = "fan-card";
+    card.style.marginLeft = i === 0 ? "0" : "-62px";
+
+    const label = document.createElement("div");
+    label.className = "fc-label";
+    const nm = document.createElement("div");
+    nm.className = "fc-name";
+    const ds = document.createElement("div");
+    ds.className = "fc-desc";
+    const art = document.createElement("div");
+    art.className = "fc-art";
+    const logo = document.createElement("img");
+    logo.alt = "";
+    logo.style.cssText = "width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,.85);padding:8px;box-shadow:0 6px 16px rgba(20,20,20,.18)";
+    logo.addEventListener("error", () => { logo.style.visibility = "hidden"; });
+    art.append(logo);
+    const chip = document.createElement("div");
+    chip.className = "fc-chip";
+    chip.textContent = "Claim →";
+
+    card.append(label, nm, ds, art, chip);
+    card.addEventListener("mouseenter", () => { hover = i; applyTransforms(); });
+    fanDeck.append(card);
+    slots.push({ card, label, nm, ds, logo, chip });
   }
 
-  function renderFan() {
-    fanDeck.innerHTML = "";
-    const n = fanDeals.length;
+  // Cheap: only transforms + z-index. Runs on hover changes.
+  function applyTransforms() {
     for (let i = 0; i < COUNT; i++) {
-      const d = fanDeals[(((i + offset) % n) + n) % n];
-      const v = VARIANTS[(((i + offset) % VARIANTS.length) + VARIANTS.length) % VARIANTS.length];
       const baseRot = (i - CENTER) * 6;
       const baseY = Math.pow(Math.abs(i - CENTER), 1.7) * 10;
       const dist = hover < 0 ? 9 : Math.abs(i - hover);
@@ -250,54 +277,37 @@ if (fanDeck) {
       if (dist === 0) { rot = baseRot * 0.25; y = baseY - 46; scale = 1.09; z = 20; }
       else if (dist === 1) { y = baseY - 16; scale = 1.02; z = 12; }
       else if (dist === 2) { y = baseY - 5; }
-
-      const card = document.createElement("a");
-      card.className = "fan-card";
-      card.href = `deal.html?d=${dealSlug(d)}`;
-      card.style.background = v.bg;
-      card.style.color = v.fg;
-      card.style.marginLeft = i === 0 ? "0" : "-62px";
-      card.style.zIndex = z;
-      card.style.transform = `translateY(${y}px) rotate(${rot}deg) scale(${scale})`;
-
-      const label = document.createElement("div");
-      label.className = "fc-label";
-      label.style.color = v.mono;
-      label.textContent = fanLabel(d);
-
-      const nm = document.createElement("div");
-      nm.className = "fc-name";
-      nm.textContent = d.name;
-
-      const ds = document.createElement("div");
-      ds.className = "fc-desc";
-      ds.style.color = v.fg === "#fff" ? "rgba(255,255,255,.65)" : "rgba(20,20,20,.6)";
-      ds.textContent = d.deal;
-
-      const art = document.createElement("div");
-      art.className = "fc-art";
-      const logo = document.createElement("img");
-      logo.src = faviconUrl(d);
-      logo.alt = "";
-      logo.style.cssText = "width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,.85);padding:8px;box-shadow:0 6px 16px rgba(20,20,20,.18)";
-      logo.addEventListener("error", () => logo.remove());
-      art.append(logo);
-
-      const chip = document.createElement("div");
-      chip.className = "fc-chip";
-      chip.style.background = v.chipBg;
-      chip.style.color = v.chipFg;
-      chip.textContent = "Claim →";
-
-      card.append(label, nm, ds, art, chip);
-      card.addEventListener("mouseenter", () => { hover = i; renderFan(); });
-      fanDeck.append(card);
+      const s = slots[i];
+      s.card.style.zIndex = z;
+      s.card.style.transform = `translateY(${y}px) rotate(${rot}deg) scale(${scale})`;
     }
   }
 
-  fanDeck.addEventListener("mouseleave", () => { hover = -1; renderFan(); });
-  document.getElementById("fan-left").addEventListener("click", () => { offset -= 1; hover = -1; renderFan(); });
-  document.getElementById("fan-right").addEventListener("click", () => { offset += 1; hover = -1; renderFan(); });
+  // Content swap: runs only when the ‹ › arrows rotate the deck.
+  function applyContent() {
+    const n = fanDeals.length;
+    for (let i = 0; i < COUNT; i++) {
+      const d = fanDeals[(((i + offset) % n) + n) % n];
+      const v = VARIANTS[(((i + offset) % VARIANTS.length) + VARIANTS.length) % VARIANTS.length];
+      const s = slots[i];
+      s.card.href = `deal.html?d=${dealSlug(d)}`;
+      s.card.style.background = v.bg;
+      s.card.style.color = v.fg;
+      s.label.style.color = v.mono;
+      s.label.textContent = fanLabel(d);
+      s.nm.textContent = d.name;
+      s.ds.style.color = v.fg === "#fff" ? "rgba(255,255,255,.65)" : "rgba(20,20,20,.6)";
+      s.ds.textContent = d.deal;
+      s.logo.style.visibility = "";
+      s.logo.src = faviconUrl(d);
+      s.chip.style.background = v.chipBg;
+      s.chip.style.color = v.chipFg;
+    }
+  }
+
+  fanDeck.addEventListener("mouseleave", () => { hover = -1; applyTransforms(); });
+  document.getElementById("fan-left").addEventListener("click", () => { offset -= 1; hover = -1; applyContent(); applyTransforms(); });
+  document.getElementById("fan-right").addEventListener("click", () => { offset += 1; hover = -1; applyContent(); applyTransforms(); });
 
   function sizeFan() {
     const s = Math.min(1, (window.innerWidth - 32) / 1380);
@@ -306,7 +316,8 @@ if (fanDeck) {
   }
   window.addEventListener("resize", sizeFan);
   sizeFan();
-  renderFan();
+  applyContent();
+  applyTransforms();
 }
 
 // ---------- home page: popular deals ----------
