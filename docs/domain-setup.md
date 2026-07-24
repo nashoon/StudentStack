@@ -1,22 +1,22 @@
-# Connecting studentstack.co to this site
+# Connecting student-stack.com to this site
 
 The site is hosted on **GitHub Pages** from this repo (`nashoon/StudentStack`, `main` branch).
 Buying a domain doesn't move the site — it just points a friendlier address at the same
 GitHub Pages hosting. Claude keeps editing + pushing exactly as before; every push still
-deploys to both `studentstack.co` and `nashoon.github.io/StudentStack/`.
+deploys to both `student-stack.com` and `nashoon.github.io/StudentStack/`.
 
 ---
 
 ## Step 1 — Buy the domain (you)
 
-Register **studentstack.co** at any registrar (Porkbun, Cloudflare, or Namecheap are all fine).
+Register **student-stack.com** at any registrar (Porkbun, Cloudflare, or Namecheap are all fine).
 Decline every upsell — hosting, email, SSL, WHOIS-privacy-upsell. GitHub provides hosting + HTTPS free.
 
 ## Step 2 — Add these DNS records at your registrar (you)
 
-In the registrar's **DNS settings** for studentstack.co, add:
+In the registrar's **DNS settings** for student-stack.com, add:
 
-**Apex (root) — four A records.** Host/Name = `@` (or blank / "studentstack.co"):
+**Apex (root) — four A records.** Host/Name = `@` (or blank / "student-stack.com"):
 
 | Type | Host | Value |
 |------|------|-------|
@@ -34,7 +34,7 @@ In the registrar's **DNS settings** for studentstack.co, add:
 | AAAA | @ | 2606:50c0:8002::153 |
 | AAAA | @ | 2606:50c0:8003::153 |
 
-**www subdomain — one CNAME** (so www.studentstack.co works and redirects to the apex):
+**www subdomain — one CNAME** (so www.student-stack.com works and redirects to the apex):
 
 | Type | Host | Value |
 |------|------|-------|
@@ -49,18 +49,18 @@ Message: **"bought it, DNS added"** (and which registrar). Then I do Step 4 in o
 
 ## Step 4 — Activate + migrate (me, ~2 min + a short wait)
 
-1. Add a `CNAME` file to the repo containing `studentstack.co` → this sets the GitHub Pages custom domain.
+1. Add a `CNAME` file to the repo containing `student-stack.com` → this sets the GitHub Pages custom domain.
 2. Update the absolute references that assume the `/StudentStack/` sub-path (they change to the root domain):
    - `404.html` — `/StudentStack/…` → `/…`
-   - `<link rel="canonical">` and `og:url` / `og:image` / `twitter:image` in `index.html`, `browse.html`, `deal.html` — `nashoon.github.io/StudentStack/…` → `studentstack.co/…`
+   - `<link rel="canonical">` and `og:url` / `og:image` / `twitter:image` in `index.html`, `browse.html`, `deal.html` — `nashoon.github.io/StudentStack/…` → `student-stack.com/…`
    - `sitemap.xml` / `robots.txt` — swap the base URL
 3. Push. GitHub verifies the domain, then auto-issues a free HTTPS certificate (~15 min).
 4. In the repo's **Settings → Pages**, "Enforce HTTPS" gets ticked once the cert is ready (I'll confirm).
 
 ## Step 5 — Verify (me)
 
-- `https://studentstack.co` loads the site
-- `http://` and `www.` both redirect to `https://studentstack.co`
+- `https://student-stack.com` loads the site
+- `http://` and `www.` both redirect to `https://student-stack.com`
 - Deal pages, filters, and the Tool Finder all work at the new address
 
 ---
