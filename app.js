@@ -219,30 +219,6 @@ if (popularGrid) {
   }
 }
 
-// Home-page stats strip — computed live so the numbers can't go stale.
-const statsRow = document.getElementById("stats-row");
-if (statsRow) {
-  const free = DEALS.filter((d) => d.pricing === "free" || d.pricing === "freemium").length;
-  const cats = new Set(DEALS.map((d) => d.category)).size;
-  const stats = [
-    [String(DEALS.length), "AI tools curated"],
-    [String(free), "free for students"],
-    [String(cats), "categories"],
-    ["100%", "links to official sites"],
-  ];
-  for (const [n, label] of stats) {
-    const tile = document.createElement("div");
-    tile.className = "stat";
-    const num = document.createElement("div");
-    num.className = "stat-num";
-    num.textContent = n;
-    const lab = document.createElement("div");
-    lab.className = "stat-label";
-    lab.textContent = label;
-    tile.append(num, lab);
-    statsRow.append(tile);
-  }
-}
 
 // ---------- browse page: full catalog with filters ----------
 
