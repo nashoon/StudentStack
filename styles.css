@@ -45,11 +45,13 @@ img { max-width: 100%; display: block; }
 
 /* ============ Demo banner ============ */
 .demo-banner {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--ink);
+  color: var(--lime);
   text-align: center;
-  font-size: 0.85rem;
-  padding: 6px 16px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  padding: 7px 16px;
 }
 
 /* ============ Nav pill + ticker ============ */
