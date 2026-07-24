@@ -52,8 +52,11 @@
         </select>
       </div>
     </div>
-    <div class="filters" id="pricing-filters" role="tablist" aria-label="Filter deals by pricing"></div>
-    <div class="filters category-row" id="category-filters" role="tablist" aria-label="Filter deals by category"></div>
+    <div class="filter-bar">
+      <div class="filters" id="pricing-filters" role="tablist" aria-label="Filter deals by pricing"></div>
+      <span class="filter-divider" aria-hidden="true"></span>
+      <div class="filters category-row" id="category-filters" role="tablist" aria-label="Filter deals by category"></div>
+    </div>
     <div class="deals-grid compact" id="browse-grid"></div>
     <p class="deals-empty" id="deals-empty" hidden>No deals match these filters yet — check back soon.</p>
   </main>
