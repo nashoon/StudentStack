@@ -1,6 +1,6 @@
-// Shared rendering for StudentStack.
-// index.html  — popular deals grid + email signup
-// browse.html — full catalog, compact 4-per-row grid, category + pricing filters
+// Shared rendering for StudentStack (editorial redesign).
+// index.html  — hero card fan + popular deals grid + email signup
+// browse.html — full catalog, filter pills + search + sort
 // deal.html   — deal detail page (?d=<slug>)
 
 const PRICING_LABELS = {
@@ -10,11 +10,14 @@ const PRICING_LABELS = {
   discount: "Student discount",
 };
 
+// Deal badge color class by pricing type (design system pills).
+const PILL_CLASS = { free: "free", freemium: "free", trial: "trial", discount: "discount" };
+
 // Ratings with fewer than this many reviews don't show a score —
 // a 5-star average from 3 reviews is noise, not signal.
 const MIN_REVIEWS = 20;
 
-const MONOGRAM_COLORS = ["#4f46e5", "#059669", "#d97706", "#dc2626", "#0891b2", "#7c3aed"];
+const MONOGRAM_COLORS = ["#7c5cff", "#4d6414", "#d97706", "#c2402a", "#20808d", "#141414"];
 
 function dealSlug(deal) {
   return deal.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -25,13 +28,20 @@ if (typeof ENRICH !== "undefined") {
   for (const d of DEALS) Object.assign(d, ENRICH[dealSlug(d)] || {});
 }
 
-// Mobile nav hamburger toggle (runs on every page).
-const navToggle = document.querySelector(".nav-toggle");
-const navMenu = document.querySelector(".nav");
-if (navToggle && navMenu) {
-  navToggle.addEventListener("click", () => {
-    const open = navMenu.classList.toggle("open");
-    navToggle.setAttribute("aria-expanded", String(open));
+// Nav drawer (Menu button in the pill nav).
+const navMenuBtn = document.querySelector(".nav-menu");
+const navDrawer = document.querySelector(".nav-drawer");
+if (navMenuBtn && navDrawer) {
+  navMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = navDrawer.classList.toggle("open");
+    navMenuBtn.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", (e) => {
+    if (navDrawer.classList.contains("open") && !navDrawer.contains(e.target)) {
+      navDrawer.classList.remove("open");
+      navMenuBtn.setAttribute("aria-expanded", "false");
+    }
   });
 }
 
@@ -48,7 +58,7 @@ function faviconUrl(deal) {
 
 function buildLogo(deal) {
   const img = document.createElement("img");
-  img.className = "deal-logo";
+  img.className = "dc-logo";
   img.src = faviconUrl(deal);
   img.alt = "";
   img.addEventListener("error", () => img.replaceWith(buildMonogram(deal.name)));
@@ -57,18 +67,16 @@ function buildLogo(deal) {
 
 function buildMonogram(name) {
   const tile = document.createElement("div");
-  tile.className = "deal-logo deal-monogram";
+  tile.className = "dc-logo dc-logo-mono";
   tile.textContent = name[0].toUpperCase();
   tile.style.background = brandColor(name);
   return tile;
 }
 
-// Branded logo tile — the default card visual. Safe and consistent:
-// screenshot services get served bot-challenge pages by many sites,
-// so live screenshots are opt-in per deal (screenshot: true).
+// Branded tile — fallback visual when a deal has no image/screenshot.
 function buildTile(deal) {
   const tile = document.createElement("div");
-  tile.className = "deal-tile";
+  tile.className = "dc-tile";
   const c = brandColor(deal.name);
   tile.style.background = `linear-gradient(135deg, ${c}1f, ${c}52)`;
   const icon = document.createElement("img");
@@ -80,15 +88,13 @@ function buildTile(deal) {
 }
 
 // Screenshots are pre-captured into images/shots/ at build time (see
-// shots-cache.js), so the gallery uses local files only — no live
-// screenshot service, so no low-res "generating…" placeholder ever.
+// shots-cache.js), so the gallery uses local files only.
 function cachedShot(url) {
   return (typeof SHOT_CACHE !== "undefined" && url && SHOT_CACHE[url]) || null;
 }
 
 function buildImg(deal, src, alt) {
   const img = document.createElement("img");
-  img.className = "deal-shot";
   img.loading = "lazy";
   img.alt = alt || `${deal.name} preview`;
   img.src = src;
@@ -108,17 +114,21 @@ function visualSources(deal) {
   return out.filter((s) => s && !seen.has(s) && seen.add(s));
 }
 
-// Card visual: hero image → cached screenshot → branded tile.
+// Card visual: hero image → cached screenshot → branded tile,
+// wrapped in the fixed-height .dc-visual frame.
 function buildVisual(deal) {
+  const wrap = document.createElement("div");
+  wrap.className = "dc-visual";
   const src = visualSources(deal)[0];
-  return src ? buildImg(deal, src, `${deal.name} preview`) : buildTile(deal);
+  wrap.append(src ? buildImg(deal, src, `${deal.name} preview`) : buildTile(deal));
+  return wrap;
 }
 
 function formatCount(n) {
   return n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + "k" : String(n);
 }
 
-// Rating row. Scores from few reviews are hidden (see MIN_REVIEWS);
+// Rating fragment. Scores from few reviews are hidden (see MIN_REVIEWS);
 // the detail page says why instead of showing nothing.
 function buildRating(deal, { detail = false } = {}) {
   const r = deal.rating;
@@ -126,14 +136,14 @@ function buildRating(deal, { detail = false } = {}) {
   if (r.count < MIN_REVIEWS) {
     if (!detail) return null;
     const few = document.createElement("p");
-    few.className = "deal-rating deal-rating-few";
+    few.className = "detail-rating";
     few.textContent = `Only ${r.count} reviews on ${r.source} — too few for a fair score`;
     return few;
   }
-  const wrap = document.createElement(detail ? "p" : "div");
-  wrap.className = "deal-rating";
+  const wrap = document.createElement(detail ? "p" : "span");
+  wrap.className = detail ? "detail-rating" : "dc-rating";
   const star = document.createElement("span");
-  star.className = "rating-star";
+  star.className = "star";
   star.textContent = "★";
   const score = document.createElement("strong");
   score.textContent = r.score.toFixed(1);
@@ -141,90 +151,178 @@ function buildRating(deal, { detail = false } = {}) {
   src.href = r.url;
   src.target = "_blank";
   src.rel = "noopener";
-  src.className = "rating-source";
   src.textContent = detail
     ? `${r.count.toLocaleString()} reviews on ${r.source}`
     : `${formatCount(r.count)} · ${r.source}`;
-  wrap.append(star, score, src);
+  wrap.append(star, " ", score, " ", src);
   return wrap;
 }
 
-function buildCard(deal, { compact = false } = {}) {
+function buildCard(deal) {
   const card = document.createElement("article");
-  card.className = "deal-card" + (compact ? " compact-card" : "");
+  card.className = "deal-card";
 
-  const top = document.createElement("div");
-  top.className = "deal-top";
-  const identity = document.createElement("div");
-  identity.className = "deal-identity";
-  identity.append(buildLogo(deal));
+  // head: logo + name + category chip
+  const head = document.createElement("div");
+  head.className = "dc-head";
+  head.append(buildLogo(deal));
   const name = document.createElement("h3");
-  name.className = "deal-name";
+  name.className = "dc-name";
   name.textContent = deal.name;
-  identity.append(name);
-  top.append(identity);
-  if (!compact) {
-    const cat = document.createElement("span");
-    cat.className = "deal-category";
-    cat.textContent = deal.category;
-    top.append(cat);
-  }
+  head.append(name);
+  const cat = document.createElement("span");
+  cat.className = "dc-cat";
+  cat.textContent = deal.category.toUpperCase();
+  head.append(cat);
 
-  const badges = document.createElement("div");
-  badges.className = "deal-badges";
-  const badge = document.createElement("span");
-  badge.className = "deal-badge";
-  badge.textContent = deal.deal;
-  badges.append(badge);
-  if (compact && PRICING_LABELS[deal.pricing]) {
-    const tag = document.createElement("span");
-    tag.className = "pricing-tag";
-    tag.textContent = PRICING_LABELS[deal.pricing];
-    badges.append(tag);
-  }
+  // colored offer pill
+  const pill = document.createElement("div");
+  pill.className = `dc-pill ${PILL_CLASS[deal.pricing] || "free"}`;
+  pill.textContent = deal.deal;
+
+  // price headline + description
+  const offer = document.createElement("div");
+  offer.className = "dc-offer";
+  offer.textContent = deal.price;
+  const desc = document.createElement("p");
+  desc.className = "dc-desc";
+  desc.textContent = deal.description;
+
+  // meta row: rating (if fair) + trial length
+  const meta = document.createElement("div");
+  meta.className = "dc-meta";
+  const rating = buildRating(deal);
+  if (rating) meta.append(rating);
   if (deal.trialLength) {
     const tp = document.createElement("span");
-    tp.className = "trial-pill";
-    tp.textContent = deal.trialLength;
-    badges.append(tp);
+    tp.className = "dc-trial";
+    tp.textContent = deal.trialLength.toUpperCase();
+    meta.append(tp);
   }
-
-  const price = document.createElement("p");
-  price.className = "deal-price";
-  price.textContent = deal.price;
-
-  const desc = document.createElement("p");
-  desc.className = "deal-desc";
-  desc.textContent = deal.description;
 
   // cards link to our own deal page; only the deal page links out to the vendor
   const cta = document.createElement("a");
-  cta.className = "btn btn-primary deal-cta";
-  cta.textContent = compact ? "View deal →" : "View this deal →";
+  cta.className = "dc-cta";
+  cta.textContent = "View this deal →";
   cta.href = `deal.html?d=${dealSlug(deal)}`;
 
-  card.append(top, badges, buildVisual(deal), price, desc);
-  const rating = buildRating(deal);
-  if (rating) card.append(rating);
+  card.append(head, pill, buildVisual(deal), offer, desc);
+  if (meta.childNodes.length) card.append(meta);
   card.append(cta);
   return card;
+}
+
+// ---------- home page: card fan ----------
+
+const fanDeck = document.getElementById("fan-deck");
+if (fanDeck) {
+  const fanScale = document.querySelector(".fan-scale");
+  const fanOuter = document.querySelector(".fan-outer");
+  // color variants straight from the design mockup
+  const VARIANTS = [
+    { bg: "#eee5d3", fg: "#141414", mono: "#8a877d", chipBg: "#141414", chipFg: "#fff" },
+    { bg: "#141414", fg: "#fff", mono: "#c6f24e", chipBg: "#c6f24e", chipFg: "#141414" },
+    { bg: "#ffffff", fg: "#141414", mono: "#8a877d", chipBg: "#7c5cff", chipFg: "#fff" },
+    { bg: "#7c5cff", fg: "#fff", mono: "rgba(255,255,255,.7)", chipBg: "#fff", chipFg: "#7c5cff" },
+    { bg: "#c6f24e", fg: "#141414", mono: "#4d6414", chipBg: "#141414", chipFg: "#fff" },
+    { bg: "#f2b63c", fg: "#141414", mono: "rgba(20,20,20,.55)", chipBg: "#141414", chipFg: "#fff" },
+    { bg: "#4a90d9", fg: "#fff", mono: "rgba(255,255,255,.75)", chipBg: "#fff", chipFg: "#2c5d8f" },
+  ];
+  const fanDeals = DEALS.filter((d) => d.popular);
+  const COUNT = Math.min(7, fanDeals.length);
+  const CENTER = (COUNT - 1) / 2;
+  let offset = 0, hover = -1;
+
+  function fanLabel(d) {
+    return `${d.category} · ${PRICING_LABELS[d.pricing] || "Deal"}`.toUpperCase();
+  }
+
+  function renderFan() {
+    fanDeck.innerHTML = "";
+    const n = fanDeals.length;
+    for (let i = 0; i < COUNT; i++) {
+      const d = fanDeals[(((i + offset) % n) + n) % n];
+      const v = VARIANTS[(((i + offset) % VARIANTS.length) + VARIANTS.length) % VARIANTS.length];
+      const baseRot = (i - CENTER) * 6;
+      const baseY = Math.pow(Math.abs(i - CENTER), 1.7) * 10;
+      const dist = hover < 0 ? 9 : Math.abs(i - hover);
+      let rot = baseRot, y = baseY, scale = 1, z = i + 1;
+      if (dist === 0) { rot = baseRot * 0.25; y = baseY - 46; scale = 1.09; z = 20; }
+      else if (dist === 1) { y = baseY - 16; scale = 1.02; z = 12; }
+      else if (dist === 2) { y = baseY - 5; }
+
+      const card = document.createElement("a");
+      card.className = "fan-card";
+      card.href = `deal.html?d=${dealSlug(d)}`;
+      card.style.background = v.bg;
+      card.style.color = v.fg;
+      card.style.marginLeft = i === 0 ? "0" : "-62px";
+      card.style.zIndex = z;
+      card.style.transform = `translateY(${y}px) rotate(${rot}deg) scale(${scale})`;
+
+      const label = document.createElement("div");
+      label.className = "fc-label";
+      label.style.color = v.mono;
+      label.textContent = fanLabel(d);
+
+      const nm = document.createElement("div");
+      nm.className = "fc-name";
+      nm.textContent = d.name;
+
+      const ds = document.createElement("div");
+      ds.className = "fc-desc";
+      ds.style.color = v.fg === "#fff" ? "rgba(255,255,255,.65)" : "rgba(20,20,20,.6)";
+      ds.textContent = d.deal;
+
+      const art = document.createElement("div");
+      art.className = "fc-art";
+      const logo = document.createElement("img");
+      logo.src = faviconUrl(d);
+      logo.alt = "";
+      logo.style.cssText = "width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,.85);padding:8px;box-shadow:0 6px 16px rgba(20,20,20,.18)";
+      logo.addEventListener("error", () => logo.remove());
+      art.append(logo);
+
+      const chip = document.createElement("div");
+      chip.className = "fc-chip";
+      chip.style.background = v.chipBg;
+      chip.style.color = v.chipFg;
+      chip.textContent = "Claim →";
+
+      card.append(label, nm, ds, art, chip);
+      card.addEventListener("mouseenter", () => { hover = i; renderFan(); });
+      fanDeck.append(card);
+    }
+  }
+
+  fanDeck.addEventListener("mouseleave", () => { hover = -1; renderFan(); });
+  document.getElementById("fan-left").addEventListener("click", () => { offset -= 1; hover = -1; renderFan(); });
+  document.getElementById("fan-right").addEventListener("click", () => { offset += 1; hover = -1; renderFan(); });
+
+  function sizeFan() {
+    const s = Math.min(1, (window.innerWidth - 32) / 1380);
+    fanScale.style.transform = `scale(${s})`;
+    fanOuter.style.height = `${390 * s}px`;
+  }
+  window.addEventListener("resize", sizeFan);
+  sizeFan();
+  renderFan();
 }
 
 // ---------- home page: popular deals ----------
 
 const popularGrid = document.getElementById("popular-grid");
 if (popularGrid) {
-  for (const deal of DEALS.filter((d) => d.popular)) {
+  for (const deal of DEALS.filter((d) => d.popular).slice(0, 6)) {
     popularGrid.appendChild(buildCard(deal));
   }
 }
-
 
 // ---------- browse page: full catalog with filters ----------
 
 const browseGrid = document.getElementById("browse-grid");
 if (browseGrid) {
-  const headingEl = document.getElementById("browse-heading");
+  const countEl = document.getElementById("browse-count");
   const catFiltersEl = document.getElementById("category-filters");
   const priceFiltersEl = document.getElementById("pricing-filters");
   const emptyEl = document.getElementById("deals-empty");
@@ -237,10 +335,10 @@ if (browseGrid) {
   const categories = ["All", ...new Set(DEALS.map((d) => d.category))];
 
   const PRICING_FILTERS = {
-    all: { label: "All pricing", heading: "All deals", match: () => true },
-    free: { label: "Free", heading: "Free deals", match: (d) => d.pricing === "free" || d.pricing === "freemium" },
-    trial: { label: "Free trials", heading: "Free trials", match: (d) => d.pricing === "trial" || d.trial },
-    discount: { label: "Student discounts", heading: "Student discounts", match: (d) => d.pricing === "discount" },
+    all: { label: "All", match: () => true },
+    free: { label: "Free", match: (d) => d.pricing === "free" || d.pricing === "freemium" },
+    trial: { label: "Free trial", match: (d) => d.pricing === "trial" || d.trial },
+    discount: { label: "Discount", match: (d) => d.pricing === "discount" },
   };
 
   const params = new URLSearchParams(location.search);
@@ -252,7 +350,7 @@ if (browseGrid) {
     el.innerHTML = "";
     for (const { key, label } of items) {
       const btn = document.createElement("button");
-      btn.className = "filter-chip" + (key === active ? " active" : "");
+      btn.className = "filter-pill" + (key === active ? " active" : "");
       if (key === active) btn.setAttribute("aria-current", "true");
       btn.textContent = label;
       btn.addEventListener("click", () => onPick(key));
@@ -294,13 +392,19 @@ if (browseGrid) {
       visible.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    headingEl.textContent = q
-      ? `“${searchTerm.trim()}” (${visible.length})`
-      : `${pricing.heading} (${visible.length})`;
+    if (countEl) countEl.textContent = `${visible.length} OF ${DEALS.length} DEALS SHOWN`;
     browseGrid.innerHTML = "";
     emptyEl.hidden = visible.length > 0;
-    for (const deal of visible) browseGrid.appendChild(buildCard(deal, { compact: true }));
+    for (const deal of visible) browseGrid.appendChild(buildCard(deal));
   }
+
+  const clearBtn = document.getElementById("clear-filters");
+  if (clearBtn) clearBtn.addEventListener("click", () => {
+    activeCategory = "All"; activePricing = "all"; searchTerm = "";
+    if (searchEl) searchEl.value = "";
+    history.replaceState(null, "", "browse.html");
+    renderBrowse();
+  });
 
   if (searchEl) searchEl.addEventListener("input", () => { searchTerm = searchEl.value; renderBrowse(); });
   if (sortEl) sortEl.addEventListener("change", () => { sortKey = sortEl.value; renderBrowse(); });
@@ -323,7 +427,7 @@ if (detailRoot) {
     const p = document.createElement("p");
     p.textContent = "This deal doesn't exist (or was removed).";
     const back = document.createElement("a");
-    back.className = "btn btn-primary";
+    back.className = "btn btn-ink";
     back.textContent = "Browse all deals";
     back.href = "browse.html";
     missing.append(h, p, back);
@@ -336,12 +440,13 @@ if (detailRoot) {
     crumbs.className = "breadcrumb";
     const crumbHome = document.createElement("a");
     crumbHome.href = "index.html";
-    crumbHome.textContent = "Home";
+    crumbHome.textContent = "HOME";
     const crumbCat = document.createElement("a");
     crumbCat.href = `browse.html?category=${encodeURIComponent(deal.category)}`;
-    crumbCat.textContent = deal.category;
+    crumbCat.textContent = deal.category.toUpperCase();
     const crumbHere = document.createElement("span");
-    crumbHere.textContent = deal.name;
+    crumbHere.className = "here";
+    crumbHere.textContent = deal.name.toUpperCase();
     crumbs.append(crumbHome, " / ", crumbCat, " / ", crumbHere);
 
     const gridEl = document.createElement("div");
@@ -366,8 +471,7 @@ if (detailRoot) {
       main.append(bf);
     }
 
-    // gallery: main visual + thumbnails. All sources are local pre-captured
-    // images (hero image + cached screenshots of the deal's key pages).
+    // gallery: main visual + thumbnails, all local pre-captured images
     const imgs = visualSources(deal);
 
     const visualWrap = document.createElement("div");
@@ -455,10 +559,9 @@ if (detailRoot) {
     const card = document.createElement("aside");
     card.className = "price-card";
     const identity = document.createElement("div");
-    identity.className = "deal-identity";
+    identity.className = "pc-id";
     identity.append(buildLogo(deal));
     const cardName = document.createElement("h2");
-    cardName.className = "deal-name";
     cardName.textContent = deal.name;
     identity.append(cardName);
 
@@ -467,21 +570,15 @@ if (detailRoot) {
     priceBig.textContent = deal.price;
 
     const badges = document.createElement("div");
-    badges.className = "deal-badges";
+    badges.className = "price-badges";
     const badge = document.createElement("span");
-    badge.className = "deal-badge";
+    badge.className = `dc-pill ${PILL_CLASS[deal.pricing] || "free"}`;
     badge.textContent = deal.deal;
     badges.append(badge);
-    if (PRICING_LABELS[deal.pricing]) {
-      const tag = document.createElement("span");
-      tag.className = "pricing-tag";
-      tag.textContent = PRICING_LABELS[deal.pricing];
-      badges.append(tag);
-    }
     if (deal.trialLength) {
       const tp = document.createElement("span");
-      tp.className = "trial-pill";
-      tp.textContent = deal.trialLength;
+      tp.className = "dc-trial";
+      tp.textContent = deal.trialLength.toUpperCase();
       badges.append(tp);
     }
 
@@ -501,7 +598,7 @@ if (detailRoot) {
     }
 
     const cta = document.createElement("a");
-    cta.className = "btn btn-primary price-cta";
+    cta.className = "price-cta";
     cta.textContent = `Get this deal on ${domain} →`;
     cta.href = deal.url;
     cta.target = "_blank";
@@ -519,8 +616,8 @@ if (detailRoot) {
     gridEl.append(main, card);
     detailRoot.append(crumbs, gridEl);
 
-    // related deals — up to 4 others in the same category
-    const related = DEALS.filter((x) => x.category === deal.category && dealSlug(x) !== slug).slice(0, 4);
+    // related deals — up to 3 others in the same category
+    const related = DEALS.filter((x) => x.category === deal.category && dealSlug(x) !== slug).slice(0, 3);
     if (related.length) {
       const sec = document.createElement("section");
       sec.className = "related";
@@ -528,15 +625,15 @@ if (detailRoot) {
       rh.className = "detail-section-title";
       rh.textContent = `More ${deal.category} deals`;
       const grid = document.createElement("div");
-      grid.className = "deals-grid compact related-grid";
-      for (const r of related) grid.appendChild(buildCard(r, { compact: true }));
+      grid.className = "deals-grid related-grid";
+      for (const r of related) grid.appendChild(buildCard(r));
       sec.append(rh, grid);
       detailRoot.append(sec);
     }
   }
 }
 
-// ---------- email signup (home page) ----------
+// ---------- email signup ----------
 // Not hooked to a backend yet.
 // TODO before launch: point this at a real list provider
 // (Buttondown, Mailchimp, ConvertKit all have simple form endpoints).

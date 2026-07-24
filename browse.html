@@ -7,7 +7,10 @@
   <meta name="description" content="Every AI tool deal for students in one place — filter by category, free deals, free trials, and student discounts." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://www.google.com" />
-  <meta name="theme-color" content="#4f46e5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#141414" />
   <link rel="canonical" href="https://student-stack.com/browse.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="StudentStack" />
@@ -17,87 +20,89 @@
   <meta property="og:image" content="https://student-stack.com/images/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://student-stack.com/images/og-image.png" />
-  <link rel="stylesheet" href="styles.css?v=24b" />
+  <link rel="stylesheet" href="styles.css?v=25a" />
 </head>
-<body>
+<body style="min-height:100vh;display:flex;flex-direction:column">
 
   <a class="skip-link" href="#browse-grid">Skip to deals</a>
 
-  <div class="demo-banner">
-    Demo data — offers below are samples and not yet verified. Remove this banner before launch.
+  <div class="demo-banner">DEMO DATA — OFFERS ARE SAMPLES, NOT YET VERIFIED. REMOVE BEFORE LAUNCH.</div>
+
+  <div class="topbar">
+    <div class="nav-pill">
+      <button class="nav-menu" aria-expanded="false" aria-controls="nav-drawer"><span class="bars"><i></i><i></i><i></i></span>Menu</button>
+      <a class="nav-word" href="index.html">STUDENTSTACK</a>
+      <div class="nav-actions">
+        <a class="nav-btn solid" href="index.html#signup">Get deal alerts</a>
+      </div>
+    </div>
+    <nav class="nav-drawer" id="nav-drawer" aria-label="Site menu">
+      <a href="index.html">Home</a>
+      <a href="browse.html">All deals</a>
+      <a href="browse.html?pricing=free">Free stuff</a>
+      <a href="browse.html?pricing=trial">Free trials</a>
+      <a href="index.html#how">How it works</a>
+    </nav>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>✱&nbsp;&nbsp;53 AI TOOL DEALS FOR STUDENTS — HAND-CHECKED</span>
+        <span>✱&nbsp;&nbsp;FIGMA PRO FREE FOR VERIFIED STUDENTS</span>
+        <span>✱&nbsp;&nbsp;53 AI TOOL DEALS FOR STUDENTS — HAND-CHECKED</span>
+        <span>✱&nbsp;&nbsp;FIGMA PRO FREE FOR VERIFIED STUDENTS</span>
+      </div>
+    </div>
   </div>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="logo" href="index.html">Student<span>Stack</span></a>
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="browse.html">All deals</a>
-        <a href="browse.html?pricing=free">Free stuff</a>
-        <a href="index.html#signup" class="btn btn-small">Get deal alerts</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <main class="browse-wrap">
+    <div class="browse-head">
+      <h1>All deals</h1>
+      <div class="browse-count" id="browse-count"></div>
     </div>
-  </header>
-
-  <main class="container browse-main">
-    <div class="deals-toolbar browse-toolbar">
-      <h2 id="browse-heading">All deals</h2>
-      <div class="browse-controls">
-        <input type="search" id="browse-search" class="browse-search" placeholder="Search tools…" aria-label="Search tools" autocomplete="off" />
-        <select id="browse-sort" class="browse-sort" aria-label="Sort deals">
-          <option value="featured">Featured</option>
-          <option value="rating">Top rated</option>
-          <option value="name">Name A–Z</option>
-        </select>
-      </div>
+    <div class="filter-row">
+      <span class="filter-key">PRICING</span>
+      <div class="filters" id="pricing-filters" role="tablist" aria-label="Filter deals by pricing" style="display:contents"></div>
     </div>
-    <div class="filter-bar">
-      <div class="filters" id="pricing-filters" role="tablist" aria-label="Filter deals by pricing"></div>
-      <span class="filter-divider" aria-hidden="true"></span>
-      <div class="filters category-row" id="category-filters" role="tablist" aria-label="Filter deals by category"></div>
+    <div class="filter-row">
+      <span class="filter-key">CATEGORY</span>
+      <div class="filters" id="category-filters" role="tablist" aria-label="Filter deals by category" style="display:contents"></div>
     </div>
-    <div class="deals-grid compact" id="browse-grid"></div>
-    <p class="deals-empty" id="deals-empty" hidden>No deals match these filters yet — check back soon.</p>
+    <div class="browse-tools">
+      <input type="search" id="browse-search" class="browse-search" placeholder="Search tools…" aria-label="Search tools" autocomplete="off" />
+      <select id="browse-sort" class="browse-sort" aria-label="Sort deals">
+        <option value="featured">Featured</option>
+        <option value="rating">Top rated</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+    <div class="deals-grid browse-grid" id="browse-grid"></div>
+    <div class="deals-empty" id="deals-empty" hidden>
+      <h3>No deals match those filters</h3>
+      <p>Try a different category, or check back — we add new deals weekly.</p>
+      <button class="btn btn-ink" id="clear-filters" type="button">Clear filters</button>
+    </div>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a class="logo" href="index.html">Student<span>Stack</span></a>
-        <p>AI tool deals for students — free tiers and student discounts, linked straight to each company's official site.</p>
+  <footer class="site-footer footer-slim">
+    <div class="container">
+      <div class="fs-left">
+        <a class="fw" href="index.html">STUDENTSTACK</a>
+        <a href="index.html#how">How it works</a>
       </div>
-      <nav class="footer-col" aria-label="Browse">
-        <h4>Browse</h4>
-        <a href="browse.html">All deals</a>
-        <a href="browse.html?pricing=free">Free deals</a>
-        <a href="browse.html?pricing=trial">Free trials</a>
-        <a href="browse.html?pricing=discount">Student discounts</a>
-      </nav>
-      <nav class="footer-col" aria-label="Categories">
-        <h4>Categories</h4>
-        <a href="browse.html?category=Coding">Coding</a>
-        <a href="browse.html?category=Writing">Writing</a>
-        <a href="browse.html?category=Studying">Studying</a>
-        <a href="browse.html?category=Design">Design</a>
-        <a href="browse.html?category=Research">Research</a>
-        <a href="browse.html?category=Productivity">Productivity</a>
-      </nav>
+      <a class="nav-btn solid" href="index.html#signup">Get deal alerts</a>
     </div>
     <div class="container">
       <p class="footer-fine">
-        Disclosure: some links on this site are affiliate links, meaning we may earn a commission
-        if you sign up — at no extra cost to you. All trademarks belong to their respective owners.
-        Deals and prices are set by each company and can change at any time; always confirm the
-        offer on the company's own site.
+        Disclosure: some links are affiliate links — we may earn a commission if you sign up, at no
+        extra cost to you. Deals are set by each company and can change; always confirm on the
+        company's own site.
       </p>
     </div>
   </footer>
 
-  <script src="deals.js?v=24b"></script>
-  <script src="enrich.js?v=24b"></script>
-  <script src="shots-cache.js?v=24b"></script>
-  <script src="app.js?v=24b"></script>
-  <script src="advisor.js?v=24b"></script>
+  <script src="deals.js?v=25a"></script>
+  <script src="enrich.js?v=25a"></script>
+  <script src="shots-cache.js?v=25a"></script>
+  <script src="app.js?v=25a"></script>
+  <script src="advisor.js?v=25a"></script>
 </body>
 </html>

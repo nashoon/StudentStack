@@ -7,7 +7,10 @@
   <meta name="description" content="A hand-checked directory of AI tools for students — free tiers and student discounts on tools for studying, writing, coding, research, and design, each linked to the official site." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://www.google.com" />
-  <meta name="theme-color" content="#4f46e5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#141414" />
   <link rel="canonical" href="https://student-stack.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="StudentStack" />
@@ -19,52 +22,71 @@
   <meta name="twitter:title" content="StudentStack — AI tool deals for students" />
   <meta name="twitter:description" content="Free tiers and student discounts on the best AI tools — hand-checked, linked to the official site." />
   <meta name="twitter:image" content="https://student-stack.com/images/og-image.png" />
-  <link rel="stylesheet" href="styles.css?v=24b" />
+  <link rel="stylesheet" href="styles.css?v=25a" />
 </head>
 <body>
 
   <a class="skip-link" href="#deals">Skip to deals</a>
 
-  <div class="demo-banner">
-    Demo data — offers below are samples and not yet verified. Remove this banner before launch.
+  <div class="demo-banner">DEMO DATA — OFFERS ARE SAMPLES, NOT YET VERIFIED. REMOVE BEFORE LAUNCH.</div>
+
+  <div class="topbar">
+    <div class="nav-pill">
+      <button class="nav-menu" aria-expanded="false" aria-controls="nav-drawer"><span class="bars"><i></i><i></i><i></i></span>Menu</button>
+      <a class="nav-word" href="index.html">STUDENTSTACK</a>
+      <div class="nav-actions">
+        <a class="nav-btn solid" href="#signup">Get deal alerts</a>
+      </div>
+    </div>
+    <nav class="nav-drawer" id="nav-drawer" aria-label="Site menu">
+      <a href="browse.html">All deals</a>
+      <a href="browse.html?pricing=free">Free stuff</a>
+      <a href="browse.html?pricing=trial">Free trials</a>
+      <a href="browse.html?pricing=discount">Student discounts</a>
+      <a href="#how">How it works</a>
+    </nav>
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>✱&nbsp;&nbsp;53 AI TOOL DEALS FOR STUDENTS — HAND-CHECKED</span>
+        <span>✱&nbsp;&nbsp;FIGMA PRO FREE FOR VERIFIED STUDENTS</span>
+        <span>✱&nbsp;&nbsp;53 AI TOOL DEALS FOR STUDENTS — HAND-CHECKED</span>
+        <span>✱&nbsp;&nbsp;FIGMA PRO FREE FOR VERIFIED STUDENTS</span>
+      </div>
+    </div>
   </div>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="logo" href="#">Student<span>Stack</span></a>
-      <nav class="nav">
-        <a href="browse.html">All deals</a>
-        <a href="browse.html?pricing=free">Free stuff</a>
-        <a href="#how">How it works</a>
-        <a href="#signup" class="btn btn-small">Get deal alerts</a>
-      </nav>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
-    </div>
-  </header>
-
   <section class="hero">
-    <div class="container">
-      <h1>The AI tools you actually need.<br />At prices students can afford.</h1>
-      <div class="belt-wrap" aria-label="Backed by students at Northwestern, UCLA, Stanford, Johns Hopkins, Cornell, UChicago, Dartmouth, Berkeley, and Georgia Tech">
-        <p class="belt-label">Backed by students at</p>
-        <div class="belt">
-          <div class="belt-track">
-            <span>Northwestern</span><span>UCLA</span><span>Stanford</span><span>Johns&nbsp;Hopkins</span><span>Cornell</span><span>UChicago</span><span>Dartmouth</span><span>Berkeley</span><span>Georgia&nbsp;Tech</span>
-            <span aria-hidden="true">Northwestern</span><span aria-hidden="true">UCLA</span><span aria-hidden="true">Stanford</span><span aria-hidden="true">Johns&nbsp;Hopkins</span><span aria-hidden="true">Cornell</span><span aria-hidden="true">UChicago</span><span aria-hidden="true">Dartmouth</span><span aria-hidden="true">Berkeley</span><span aria-hidden="true">Georgia&nbsp;Tech</span>
-          </div>
+    <h1>AI Tools <span class="star">✱</span> Student Prices</h1>
+    <p class="hero-sub">A hand-checked directory of <mark>free tiers</mark> &amp; <mark>student discounts</mark> on AI tools for <mark>coding</mark>, <mark>writing</mark> and <mark>research</mark> — every deal claimed on the official site.</p>
+    <div class="hero-actions">
+      <a href="browse.html" class="btn btn-ink">Browse all deals</a>
+      <a href="browse.html?pricing=free" class="btn btn-lime">Free stuff only</a>
+    </div>
+    <div class="belt-wrap" aria-label="Backed by students at Northwestern, UCLA, Stanford, Johns Hopkins, Cornell, UChicago, Dartmouth, Berkeley, and Georgia Tech">
+      <p class="belt-label">BACKED BY STUDENTS AT</p>
+      <div class="belt">
+        <div class="belt-track">
+          <span>NORTHWESTERN</span><span>UCLA</span><span>STANFORD</span><span>JOHNS&nbsp;HOPKINS</span><span>CORNELL</span><span>UCHICAGO</span><span>DARTMOUTH</span><span>BERKELEY</span><span>GEORGIA&nbsp;TECH</span>
+          <span aria-hidden="true">NORTHWESTERN</span><span aria-hidden="true">UCLA</span><span aria-hidden="true">STANFORD</span><span aria-hidden="true">JOHNS&nbsp;HOPKINS</span><span aria-hidden="true">CORNELL</span><span aria-hidden="true">UCHICAGO</span><span aria-hidden="true">DARTMOUTH</span><span aria-hidden="true">BERKELEY</span><span aria-hidden="true">GEORGIA&nbsp;TECH</span>
         </div>
-      </div>
-      <div class="hero-actions">
-        <a href="browse.html" class="btn btn-primary">Browse all deals</a>
-        <a href="browse.html?pricing=free" class="btn btn-ghost">Browse free deals</a>
-        <a href="browse.html?pricing=trial" class="btn btn-ghost">Browse free trials</a>
       </div>
     </div>
   </section>
 
-  <section class="cat-nav">
+  <div class="fan-outer">
+    <div class="fan-scale">
+      <button class="fan-arrow" id="fan-left" aria-label="Previous deals">‹</button>
+      <div class="fan-deck" id="fan-deck"></div>
+      <button class="fan-arrow" id="fan-right" aria-label="Next deals">›</button>
+    </div>
+  </div>
+
+  <div class="section-white" id="deals">
     <div class="container">
-      <h2 class="cat-nav-title">Browse by category</h2>
+      <div class="section-head">
+        <h2>Browse by category</h2>
+        <a class="section-link" href="browse.html">ALL DEALS →</a>
+      </div>
       <div class="cat-chips">
         <a href="browse.html?category=Coding">Coding</a>
         <a href="browse.html?category=Writing">Writing</a>
@@ -73,76 +95,80 @@
         <a href="browse.html?category=Design">Design</a>
         <a href="browse.html?category=Productivity">Productivity</a>
       </div>
-    </div>
-  </section>
 
-  <main id="deals" class="container">
-    <div class="deals-toolbar">
-      <h2>Popular deals</h2>
-      <a class="see-all" href="browse.html">See all deals →</a>
+      <div class="section-head" style="margin-top:56px">
+        <h2>Popular deals</h2>
+        <a class="section-link" href="browse.html">SEE ALL →</a>
+      </div>
+      <div class="deals-grid" id="popular-grid"></div>
     </div>
-    <div class="deals-grid" id="popular-grid"></div>
-  </main>
+  </div>
 
-  <section id="how" class="how">
+  <div class="how" id="how">
     <div class="container">
-      <h2>How it works</h2>
+      <div class="section-head">
+        <h2>How it works</h2>
+        <a class="section-link" href="browse.html">ALL DEALS →</a>
+      </div>
       <div class="how-grid">
         <div class="how-step">
-          <div class="how-num">1</div>
-          <h3>We find the deals</h3>
-          <p>We track student discounts, education tiers, and negotiate exclusive offers directly with AI companies.</p>
+          <div class="num">01 — WE FIND THE DEALS</div>
+          <p>We track student discounts and education tiers, and negotiate exclusive offers directly with AI companies.</p>
         </div>
         <div class="how-step">
-          <div class="how-num">2</div>
-          <h3>You claim them on the official site</h3>
+          <div class="num">02 — YOU CLAIM OFFICIALLY</div>
           <p>Every button takes you to the company's own checkout. We never touch your payment info.</p>
         </div>
         <div class="how-step">
-          <div class="how-num">3</div>
-          <h3>The site stays free</h3>
+          <div class="num">03 — THE SITE STAYS FREE</div>
           <p>Some links are affiliate links — if you sign up, the company pays us a cut. It never costs you extra.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section id="signup" class="signup">
-    <div class="container signup-inner">
-      <h2>New student deals, straight to your inbox</h2>
-      <p>One short email when we land a new deal worth knowing about. No spam.</p>
+  <div class="signup" id="signup">
+    <div class="container">
+      <div>
+        <h2>New student deals, straight to your inbox</h2>
+        <p>One short email when we land a deal worth knowing about. No spam.</p>
+      </div>
       <form id="signup-form" class="signup-form">
         <input type="email" id="signup-email" placeholder="you@school.edu" required aria-label="Email address" />
-        <button type="submit" class="btn btn-primary">Notify me</button>
+        <button type="submit">Notify me</button>
       </form>
       <p class="signup-status" id="signup-status" hidden></p>
     </div>
-  </section>
+  </div>
 
   <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="footer-brand">
-        <a class="logo" href="index.html">Student<span>Stack</span></a>
-        <p>AI tool deals for students — free tiers and student discounts, linked straight to each company's official site.</p>
-      </div>
-      <nav class="footer-col" aria-label="Browse">
-        <h4>Browse</h4>
-        <a href="browse.html">All deals</a>
-        <a href="browse.html?pricing=free">Free deals</a>
-        <a href="browse.html?pricing=trial">Free trials</a>
-        <a href="browse.html?pricing=discount">Student discounts</a>
-      </nav>
-      <nav class="footer-col" aria-label="Categories">
-        <h4>Categories</h4>
-        <a href="browse.html?category=Coding">Coding</a>
-        <a href="browse.html?category=Writing">Writing</a>
-        <a href="browse.html?category=Studying">Studying</a>
-        <a href="browse.html?category=Design">Design</a>
-        <a href="browse.html?category=Research">Research</a>
-        <a href="browse.html?category=Productivity">Productivity</a>
-      </nav>
-    </div>
     <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="fw">STUDENTSTACK</div>
+          <p>AI tool deals for students — free tiers and student discounts, linked straight to each company's official site.</p>
+        </div>
+        <div class="footer-col">
+          <h4>BROWSE</h4>
+          <nav aria-label="Browse">
+            <a href="browse.html">All deals</a>
+            <a href="browse.html?pricing=free">Free deals</a>
+            <a href="browse.html?pricing=trial">Free trials</a>
+            <a href="browse.html?pricing=discount">Student discounts</a>
+          </nav>
+        </div>
+        <div class="footer-col">
+          <h4>CATEGORIES</h4>
+          <nav aria-label="Categories">
+            <a href="browse.html?category=Coding">Coding</a>
+            <a href="browse.html?category=Writing">Writing</a>
+            <a href="browse.html?category=Studying">Studying</a>
+            <a href="browse.html?category=Design">Design</a>
+            <a href="browse.html?category=Research">Research</a>
+            <a href="browse.html?category=Productivity">Productivity</a>
+          </nav>
+        </div>
+      </div>
       <p class="footer-fine">
         Disclosure: some links on this site are affiliate links, meaning we may earn a commission
         if you sign up — at no extra cost to you. All trademarks belong to their respective owners.
@@ -152,10 +178,10 @@
     </div>
   </footer>
 
-  <script src="deals.js?v=24b"></script>
-  <script src="enrich.js?v=24b"></script>
-  <script src="shots-cache.js?v=24b"></script>
-  <script src="app.js?v=24b"></script>
-  <script src="advisor.js?v=24b"></script>
+  <script src="deals.js?v=25a"></script>
+  <script src="enrich.js?v=25a"></script>
+  <script src="shots-cache.js?v=25a"></script>
+  <script src="app.js?v=25a"></script>
+  <script src="advisor.js?v=25a"></script>
 </body>
 </html>
